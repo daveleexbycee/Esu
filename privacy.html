@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Eccentric Souls in Unity (ESU)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            esu: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+              400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+              800: '#166534', 900: '#14532d', 950: '#052e16',
+            }
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', system-ui, sans-serif; } .gradient-green { background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%); }</style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-esu-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full gradient-green flex items-center justify-center"><span class="text-white font-bold text-sm">ESU</span></div>
+          <span class="font-bold text-esu-800 hidden sm:inline">Eccentric Souls in Unity</span>
+        </a>
+        <a href="join.html" class="text-sm font-semibold text-esu-600 hover:text-esu-700">Join the Circle</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-12 md:py-16">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Privacy Policy</h1>
+    <p class="text-gray-500 text-sm mb-8">Last updated: October 2025</p>
+
+    <div class="space-y-6 text-gray-700 leading-relaxed">
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">1. Information We Collect</h2>
+        <p>When you join the Circle we collect the information you provide in the sign-up form: name, phone number, email address, home address, age range, date of birth, county, and ZIP code. We may also collect information you later share within the community.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">2. How We Use Your Information</h2>
+        <p>We use your information to:</p>
+        <ul class="list-disc pl-5 mt-2 space-y-1">
+          <li>Process your membership and connect you with the Circle</li>
+          <li>Communicate with you about Circle activities and mutual support opportunities</li>
+          <li>Maintain the safety and integrity of the community</li>
+          <li>Improve our services and understand the needs of members</li>
+        </ul>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">3. Sharing of Information</h2>
+        <p>We do not sell your personal information. We may share limited information with other Circle members as needed for mutual support, and with service providers who help us operate the community (under confidentiality agreements). We may also disclose information if required by law.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">4. Data Security</h2>
+        <p>We take reasonable steps to protect the information you share with us. No method of transmission or storage is completely secure, so we encourage members to share sensitive details only as needed.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">5. Your Choices</h2>
+        <p>You may request access to, correction of, or deletion of your personal information by contacting us. You may also leave the Circle at any time.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">6. Contact Us</h2>
+        <p>For privacy-related questions:<br>
+        Eccentric Souls in Unity<br>
+        6219 Coral Lake Dr.<br>
+        Margate, FL 33063</p>
+      </section>
+    </div>
+
+    <div class="mt-10">
+      <a href="join.html" class="text-esu-600 font-semibold hover:text-esu-700">← Back to Join</a>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-300 py-10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 text-sm text-center">
+      <p>Eccentric Souls in Unity · 6219 Coral Lake Dr., Margate, FL 33063</p>
+      <p class="mt-2 text-gray-500">&copy; <span id="year"></span> Eccentric Souls in Unity. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

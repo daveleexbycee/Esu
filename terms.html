@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Conditions — Eccentric Souls in Unity (ESU)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            esu: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac',
+              400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d',
+              800: '#166534', 900: '#14532d', 950: '#052e16',
+            }
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', system-ui, sans-serif; } .gradient-green { background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%); }</style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-esu-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full gradient-green flex items-center justify-center"><span class="text-white font-bold text-sm">ESU</span></div>
+          <span class="font-bold text-esu-800 hidden sm:inline">Eccentric Souls in Unity</span>
+        </a>
+        <a href="join.html" class="text-sm font-semibold text-esu-600 hover:text-esu-700">Join the Circle</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-12 md:py-16">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Terms & Conditions</h1>
+    <p class="text-gray-500 text-sm mb-8">Last updated: October 2025</p>
+
+    <div class="space-y-6 text-gray-700 leading-relaxed">
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">1. Welcome to the Circle</h2>
+        <p>By joining Eccentric Souls in Unity (“ESU”, “the Circle”, “we”, “us”), you agree to these Terms & Conditions. ESU is a community-based giving circle. Membership is voluntary and based on shared values of mutual support.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">2. Membership</h2>
+        <p>Membership is open to individuals who complete the sign-up process and agree to these terms. We reserve the right to review applications and to remove members who act in ways that harm the safety or trust of the community.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">3. Giving and Receiving</h2>
+        <p>Participation in giving and receiving is voluntary. ESU does not guarantee any specific form or amount of support. Members are expected to act honestly and with respect toward one another.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">4. Conduct</h2>
+        <p>Members agree to treat others with dignity, avoid harassment or discrimination, and keep confidential information shared within the Circle private unless the person who shared it gives permission.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">5. Limitation of Liability</h2>
+        <p>ESU is a community network, not a formal charity or financial institution. We are not responsible for the actions of individual members or for outcomes of any support exchanged within the Circle.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">6. Changes</h2>
+        <p>We may update these terms from time to time. Continued membership after changes constitutes acceptance of the updated terms.</p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">7. Contact</h2>
+        <p>Eccentric Souls in Unity<br>6219 Coral Lake Dr.<br>Margate, FL 33063</p>
+      </section>
+    </div>
+
+    <div class="mt-10">
+      <a href="join.html" class="text-esu-600 font-semibold hover:text-esu-700">← Back to Join</a>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-300 py-10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 text-sm text-center">
+      <p>Eccentric Souls in Unity · 6219 Coral Lake Dr., Margate, FL 33063</p>
+      <p class="mt-2 text-gray-500">&copy; <span id="year"></span> Eccentric Souls in Unity. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
