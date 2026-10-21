@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Join the Circle — Eccentric Souls in Unity (ESU)</title>
-  <meta name="description" content="Become a member of Eccentric Souls in Unity." />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,206 +22,137 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; margin: 0; }
     .brand-panel {
-      background: linear-gradient(160deg, rgba(15,19,28,0.90) 0%, rgba(22,101,52,0.78) 100%),
-                  url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1200&q=80') center/cover;
+      background: linear-gradient(160deg, rgba(15,19,28,0.90) 0%, rgba(22,101,52,0.80) 100%),
+                  url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1400&q=80') center/cover;
     }
     .step { display: none; }
     .step.active { display: block; }
   </style>
 </head>
-<body class="bg-gray-100 antialiased min-h-screen flex items-center justify-center p-4 md:p-6">
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
 
-  <div class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[640px]">
-
-    <!-- Left brand panel -->
-    <div class="brand-panel relative text-white md:w-[40%] p-8 flex flex-col justify-between min-h-[220px] md:min-h-0">
-      <div class="flex items-center justify-between relative z-10">
-        <a href="index.html" class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-full bg-esu-500 flex items-center justify-center shadow">
-            <span class="text-white font-bold text-sm">ESU</span>
-          </div>
-          <span class="font-bold text-lg tracking-tight">ESU<span class="text-esu-400">.</span></span>
-        </a>
-        <a href="index.html" class="text-xs font-medium px-3 py-1.5 rounded-full border border-white/30 hover:bg-white/10 transition">
-          Back to home ↗
-        </a>
-      </div>
-      <div class="relative z-10 mt-8 md:mt-0">
-        <p class="text-2xl md:text-3xl font-bold leading-snug">
-          Create an account
-        </p>
-        <p class="mt-3 text-white/75 text-sm leading-relaxed">
-          Join everyday people who give when they have and receive when they need. No shame. No begging. Just Community.
-        </p>
-        <!-- Mini progress on brand panel for desktop -->
-        <div class="hidden md:flex items-center gap-2 mt-8">
-          <div id="side-prog-1" class="w-2.5 h-2.5 rounded-full bg-esu-400"></div>
-          <div id="side-prog-2" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
-          <div id="side-prog-3" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
-          <div id="side-prog-4" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
-          <span id="side-step-label" class="text-xs text-white/60 ml-2">Step 1 of 4</span>
+  <!-- Left full-screen brand -->
+  <div class="brand-panel text-white w-full md:w-[42%] min-h-[35vh] md:min-h-screen p-8 md:p-12 flex flex-col justify-between sticky top-0">
+    <div class="flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-full bg-esu-500 flex items-center justify-center shadow-lg">
+          <span class="text-white font-bold text-sm">ESU</span>
         </div>
+        <span class="font-bold text-xl tracking-tight">ESU<span class="text-esu-400">.</span></span>
+      </a>
+      <a href="index.html" class="text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/30 hover:bg-white/10 transition">
+        Back to home ↗
+      </a>
+    </div>
+    <div class="py-8 md:py-0">
+      <p class="text-3xl md:text-4xl font-bold leading-tight">Create an account</p>
+      <p class="mt-4 text-white/75 text-base max-w-sm leading-relaxed">
+        Join everyday people who give when they have and receive when they need.
+      </p>
+      <div class="flex items-center gap-2 mt-8">
+        <div id="side-prog-1" class="w-2.5 h-2.5 rounded-full bg-esu-400"></div>
+        <div id="side-prog-2" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
+        <div id="side-prog-3" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
+        <div id="side-prog-4" class="w-2.5 h-2.5 rounded-full bg-white/30"></div>
+        <span id="side-step-label" class="text-xs text-white/60 ml-2">Step 1 of 4</span>
       </div>
     </div>
+    <p class="text-white/40 text-xs hidden md:block">Eccentric Souls in Unity · Margate, FL</p>
+  </div>
 
-    <!-- Right form panel -->
-    <div class="flex-1 p-6 md:p-10 overflow-y-auto max-h-[90vh] md:max-h-none">
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Join the Circle</h1>
-        <p class="text-sm text-gray-500 mt-1">
-          Already have an account?
-          <a href="login.html" class="text-esu-600 font-semibold hover:text-esu-700 underline underline-offset-2">Log in</a>
-        </p>
-      </div>
+  <!-- Right full-screen form -->
+  <div class="w-full md:w-[58%] min-h-screen bg-white p-8 md:p-12 lg:px-16 lg:py-12 overflow-y-auto">
+    <div class="max-w-lg mx-auto md:mx-0">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Join the Circle</h1>
+      <p class="text-sm text-gray-500 mt-1 mb-6">
+        Already have an account?
+        <a href="login.html" class="text-esu-600 font-semibold hover:text-esu-700 underline underline-offset-2">Log in</a>
+      </p>
 
-      <!-- Progress bar (mobile + desktop) -->
-      <div class="flex items-center gap-1.5 mb-6">
-        <div id="bar-1" class="h-1 flex-1 rounded-full bg-esu-500 transition-colors"></div>
-        <div id="bar-2" class="h-1 flex-1 rounded-full bg-gray-200 transition-colors"></div>
-        <div id="bar-3" class="h-1 flex-1 rounded-full bg-gray-200 transition-colors"></div>
-        <div id="bar-4" class="h-1 flex-1 rounded-full bg-gray-200 transition-colors"></div>
+      <div class="flex items-center gap-1.5 mb-8">
+        <div id="bar-1" class="h-1.5 flex-1 rounded-full bg-esu-500 transition-colors"></div>
+        <div id="bar-2" class="h-1.5 flex-1 rounded-full bg-gray-200 transition-colors"></div>
+        <div id="bar-3" class="h-1.5 flex-1 rounded-full bg-gray-200 transition-colors"></div>
+        <div id="bar-4" class="h-1.5 flex-1 rounded-full bg-gray-200 transition-colors"></div>
       </div>
 
       <form id="join-form" novalidate>
-        <!-- Step 1 -->
         <div id="step-1" class="step active space-y-3.5">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="firstName" required placeholder="First name"
-              class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-            <input type="text" id="lastName" required placeholder="Last name"
-              class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+            <input type="text" id="firstName" required placeholder="First name" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+            <input type="text" id="lastName" required placeholder="Last name" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
           </div>
-          <input type="tel" id="phone" required placeholder="Phone number"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-          <input type="email" id="email" required placeholder="Email"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-          <input type="password" id="password" required minlength="6" placeholder="Password (min 6 characters)"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-          <input type="password" id="passwordConfirm" required minlength="6" placeholder="Confirm password"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-          <textarea id="homeAddress" rows="2" required placeholder="Home address"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition resize-none"></textarea>
-          <button type="button" onclick="nextStep(1)" class="w-full py-3.5 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700 transition shadow-md mt-2">
-            Continue
-          </button>
+          <input type="tel" id="phone" required placeholder="Phone number" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <input type="email" id="email" required placeholder="Email" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <input type="password" id="password" required minlength="6" placeholder="Password (min 6 characters)" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <input type="password" id="passwordConfirm" required minlength="6" placeholder="Confirm password" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <textarea id="homeAddress" rows="2" required placeholder="Home address" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition resize-none"></textarea>
+          <button type="button" onclick="nextStep(1)" class="w-full py-3.5 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700 transition shadow-md mt-2">Continue</button>
         </div>
 
-        <!-- Step 2 -->
-        <div id="step-2" class="step space-y-3">
-          <p class="text-sm text-gray-600 mb-2">Select your age range</p>
+        <div id="step-2" class="step space-y-2.5">
+          <p class="text-sm text-gray-600 mb-3">Select your age range</p>
           <div id="age-options" class="space-y-2">
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="15-25" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">15–25</span>
-            </label>
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="25-35" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">25–35</span>
-            </label>
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="35-45" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">35–45</span>
-            </label>
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="45-55" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">45–55</span>
-            </label>
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="55-65" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">55–65</span>
-            </label>
-            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition">
-              <input type="radio" name="ageRange" value="65-75+" class="text-esu-600 focus:ring-esu-500" />
-              <span class="font-medium text-gray-800 text-sm">65–75+</span>
-            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="15-25" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">15–25</span></label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="25-35" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">25–35</span></label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="35-45" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">35–45</span></label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="45-55" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">45–55</span></label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="55-65" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">55–65</span></label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:border-esu-300 hover:bg-esu-50 cursor-pointer transition"><input type="radio" name="ageRange" value="65-75+" class="text-esu-600" /><span class="font-medium text-gray-800 text-sm">65–75+</span></label>
           </div>
-          <div class="flex gap-3 mt-4">
+          <div class="flex gap-3 mt-5">
             <button type="button" onclick="prevStep(2)" class="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">Back</button>
             <button type="button" onclick="nextStep(2)" class="flex-1 py-3 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700">Continue</button>
           </div>
         </div>
 
-        <!-- Step 3 -->
         <div id="step-3" class="step space-y-3.5">
           <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Date of Birth</label>
-            <input type="date" id="dob" required class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+            <input type="date" id="dob" required class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
           </div>
-          <input type="text" id="county" required placeholder="County"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
-          <input type="text" id="zip" required placeholder="ZIP Code" pattern="[0-9]{5}(-[0-9]{4})?"
-            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <input type="text" id="county" required placeholder="County" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
+          <input type="text" id="zip" required placeholder="ZIP Code" class="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-esu-500 transition" />
           <div class="flex gap-3 mt-4">
             <button type="button" onclick="prevStep(3)" class="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">Back</button>
             <button type="button" onclick="nextStep(3)" class="flex-1 py-3 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700">Continue</button>
           </div>
         </div>
 
-        <!-- Step 4 -->
         <div id="step-4" class="step space-y-4">
           <label class="flex items-start gap-3 p-4 rounded-xl border border-gray-200 hover:border-esu-300 cursor-pointer transition">
-            <input type="checkbox" id="becomeMember" required class="mt-0.5 w-4 h-4 text-esu-600 rounded focus:ring-esu-500" />
+            <input type="checkbox" id="becomeMember" required class="mt-0.5 w-4 h-4 text-esu-600 rounded" />
             <span class="text-sm text-gray-800 font-medium">Become a member</span>
           </label>
           <label class="flex items-start gap-3 p-4 rounded-xl border border-gray-200 hover:border-esu-300 cursor-pointer transition">
-            <input type="checkbox" id="agreeTerms" required class="mt-0.5 w-4 h-4 text-esu-600 rounded focus:ring-esu-500" />
+            <input type="checkbox" id="agreeTerms" required class="mt-0.5 w-4 h-4 text-esu-600 rounded" />
             <span class="text-sm text-gray-800">I agree to the <a href="terms.html" target="_blank" class="text-esu-600 underline">Terms</a> and <a href="privacy.html" target="_blank" class="text-esu-600 underline">Privacy Policy</a></span>
           </label>
           <p id="form-error" class="hidden text-sm text-red-600 bg-red-50 px-4 py-3 rounded-xl"></p>
-          <button type="submit" id="submit-btn" class="w-full py-3.5 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700 transition shadow-md disabled:opacity-60">
-            Create Account
-          </button>
+          <button type="submit" id="submit-btn" class="w-full py-3.5 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700 transition shadow-md disabled:opacity-60">Create Account</button>
           <button type="button" onclick="prevStep(4)" class="w-full py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">Back</button>
         </div>
 
-        <!-- Success -->
-        <div id="success" class="hidden text-center py-8">
+        <div id="success" class="hidden text-center py-10">
           <div class="w-16 h-16 rounded-full bg-esu-100 flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
           </div>
           <h2 class="text-xl font-bold text-gray-900 mb-2">Welcome to the Circle!</h2>
           <p class="text-gray-600 text-sm mb-5">Redirecting to your Member Area…</p>
-          <a href="dashboard.html" class="inline-flex px-6 py-2.5 rounded-xl bg-esu-600 text-white font-semibold hover:bg-esu-700">Go now →</a>
+          <a href="dashboard.html" class="inline-flex px-6 py-2.5 rounded-xl bg-esu-600 text-white font-semibold">Go now →</a>
         </div>
       </form>
-
-      <div class="flex items-center gap-3 my-6">
-        <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-xs text-gray-400 font-medium">Or register with</span>
-        <div class="flex-1 h-px bg-gray-200"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <button type="button" disabled class="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 bg-gray-50 cursor-not-allowed">
-          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Google
-        </button>
-        <button type="button" disabled class="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 bg-gray-50 cursor-not-allowed">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-          Apple
-        </button>
-      </div>
     </div>
   </div>
 
   <script type="module">
-    import {
-      auth, db,
-      createUserWithEmailAndPassword, updateProfile,
-      doc, setDoc, serverTimestamp
-    } from './js/firebase.js';
+    import { auth, db, createUserWithEmailAndPassword, updateProfile, doc, setDoc, serverTimestamp } from './js/firebase.js';
 
     let currentStep = 1;
-    const totalSteps = 4;
-
-    window.nextStep = function(from) {
-      if (!validateStep(from)) return;
-      if (from < totalSteps) showStep(from + 1);
-    };
-    window.prevStep = function(from) {
-      if (from > 1) showStep(from - 1);
-    };
+    window.nextStep = function(from) { if (!validateStep(from)) return; if (from < 4) showStep(from + 1); };
+    window.prevStep = function(from) { if (from > 1) showStep(from - 1); };
 
     function showStep(n) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -230,72 +160,46 @@
       currentStep = n;
       updateProgress();
     }
-
     function updateProgress() {
       for (let i = 1; i <= 4; i++) {
         const bar = document.getElementById('bar-' + i);
         const side = document.getElementById('side-prog-' + i);
         if (i <= currentStep) {
-          bar.classList.remove('bg-gray-200');
-          bar.classList.add('bg-esu-500');
+          bar.classList.remove('bg-gray-200'); bar.classList.add('bg-esu-500');
           if (side) { side.classList.remove('bg-white/30'); side.classList.add('bg-esu-400'); }
         } else {
-          bar.classList.add('bg-gray-200');
-          bar.classList.remove('bg-esu-500');
+          bar.classList.add('bg-gray-200'); bar.classList.remove('bg-esu-500');
           if (side) { side.classList.add('bg-white/30'); side.classList.remove('bg-esu-400'); }
         }
       }
       const label = document.getElementById('side-step-label');
       if (label) label.textContent = 'Step ' + currentStep + ' of 4';
     }
-
     function validateStep(step) {
       if (step === 1) {
-        const fields = ['firstName', 'lastName', 'phone', 'email', 'password', 'passwordConfirm', 'homeAddress'];
-        for (const id of fields) {
-          if (!document.getElementById(id).value.trim()) {
-            alert('Please fill in all required fields.');
-            return false;
-          }
+        for (const id of ['firstName','lastName','phone','email','password','passwordConfirm','homeAddress']) {
+          if (!document.getElementById(id).value.trim()) { alert('Please fill in all fields.'); return false; }
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value)) {
-          alert('Please enter a valid email.');
-          return false;
-        }
-        const pw = document.getElementById('password').value;
-        if (pw.length < 6) { alert('Password must be at least 6 characters.'); return false; }
-        if (pw !== document.getElementById('passwordConfirm').value) {
-          alert('Passwords do not match.');
-          return false;
-        }
+        if (document.getElementById('password').value.length < 6) { alert('Password must be at least 6 characters.'); return false; }
+        if (document.getElementById('password').value !== document.getElementById('passwordConfirm').value) { alert('Passwords do not match.'); return false; }
         return true;
       }
       if (step === 2) {
-        if (!document.querySelector('input[name="ageRange"]:checked')) {
-          alert('Please select an age range.');
-          return false;
-        }
+        if (!document.querySelector('input[name="ageRange"]:checked')) { alert('Please select an age range.'); return false; }
         return true;
       }
       if (step === 3) {
-        for (const id of ['dob', 'county', 'zip']) {
-          if (!document.getElementById(id).value.trim()) {
-            alert('Please fill in all required fields.');
-            return false;
-          }
+        for (const id of ['dob','county','zip']) {
+          if (!document.getElementById(id).value.trim()) { alert('Please fill in all fields.'); return false; }
         }
         return true;
       }
       return true;
     }
-
-    document.querySelectorAll('input[name="ageRange"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        document.querySelectorAll('#age-options label').forEach(l => {
-          l.classList.remove('border-esu-400', 'bg-esu-50');
-          l.classList.add('border-gray-200');
-        });
-        this.closest('label').classList.add('border-esu-400', 'bg-esu-50');
+    document.querySelectorAll('input[name="ageRange"]').forEach(r => {
+      r.addEventListener('change', function() {
+        document.querySelectorAll('#age-options label').forEach(l => { l.classList.remove('border-esu-400','bg-esu-50'); l.classList.add('border-gray-200'); });
+        this.closest('label').classList.add('border-esu-400','bg-esu-50');
       });
     });
 
@@ -303,57 +207,39 @@
       e.preventDefault();
       const errEl = document.getElementById('form-error');
       errEl.classList.add('hidden');
-
       if (!document.getElementById('becomeMember').checked || !document.getElementById('agreeTerms').checked) {
-        errEl.textContent = 'Please check both agreement boxes.';
-        errEl.classList.remove('hidden');
-        return;
+        errEl.textContent = 'Please check both agreement boxes.'; errEl.classList.remove('hidden'); return;
       }
-
       const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Creating account…';
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+      btn.disabled = true; btn.textContent = 'Creating account…';
       const firstName = document.getElementById('firstName').value.trim();
       const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
       const ageEl = document.querySelector('input[name="ageRange"]:checked');
-
       const profile = {
-        firstName, lastName,
+        firstName, lastName, email,
         phone: document.getElementById('phone').value.trim(),
-        email,
         homeAddress: document.getElementById('homeAddress').value.trim(),
         ageRange: ageEl ? ageEl.value : '',
         dob: document.getElementById('dob').value,
         county: document.getElementById('county').value.trim(),
         zip: document.getElementById('zip').value.trim(),
-        createdAt: serverTimestamp(),
-        role: 'member'
+        createdAt: serverTimestamp(), role: 'member'
       };
-
       try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        const cred = await createUserWithEmailAndPassword(auth, email, document.getElementById('password').value);
         await updateProfile(cred.user, { displayName: firstName + ' ' + lastName });
         await setDoc(doc(db, 'members', cred.user.uid), profile);
-        localStorage.setItem('esu_member', JSON.stringify({
-          ...profile, uid: cred.user.uid, joinedAt: new Date().toISOString()
-        }));
-
+        localStorage.setItem('esu_member', JSON.stringify({ ...profile, uid: cred.user.uid, joinedAt: new Date().toISOString() }));
         document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
         document.getElementById('success').classList.remove('hidden');
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1600);
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
       } catch (err) {
-        console.error(err);
         let msg = err.message || 'Something went wrong.';
-        if (err.code === 'auth/email-already-in-use') msg = 'This email is already registered. Please log in.';
-        if (err.code === 'auth/weak-password') msg = 'Password is too weak.';
-        if (err.code === 'auth/operation-not-allowed') msg = 'Enable Email/Password in Firebase Console → Authentication.';
-        errEl.textContent = msg;
-        errEl.classList.remove('hidden');
-        btn.disabled = false;
-        btn.textContent = 'Create Account';
+        if (err.code === 'auth/email-already-in-use') msg = 'Email already registered. Please log in.';
+        if (err.code === 'auth/operation-not-allowed') msg = 'Enable Email/Password in Firebase Console.';
+        errEl.textContent = msg; errEl.classList.remove('hidden');
+        btn.disabled = false; btn.textContent = 'Create Account';
       }
     });
   </script>

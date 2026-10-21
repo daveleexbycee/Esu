@@ -11,10 +11,10 @@
         extend: {
           colors: {
             esu: {
-              50: '#f0fdf4', 100: '#dcfce7', 400: '#4ade80', 500: '#22c55e',
-              600: '#16a34a', 700: '#15803d', 800: '#166534'
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 400: '#4ade80',
+              500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d'
             },
-            charcoal: { 900: '#0f131c', 950: '#0a0d14' }
+            deep: { 800: '#1a1230', 900: '#120c24', 950: '#0c0818' }
           },
           fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
         }
@@ -22,229 +22,385 @@
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>body { font-family: 'Inter', system-ui, sans-serif; }</style>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .hero-bg {
+      background: linear-gradient(135deg, #14532d 0%, #166534 40%, #0f172a 100%);
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 antialiased">
 
-  <header class="bg-charcoal-900 text-white sticky top-0 z-50 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <a href="index.html" class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-full bg-esu-500 flex items-center justify-center">
-            <span class="text-white font-bold text-sm">ESU</span>
+  <!-- Auth states -->
+  <div id="auth-loading" class="min-h-screen flex items-center justify-center"><p class="text-gray-500">Loading…</p></div>
+  <div id="auth-required" class="hidden min-h-screen flex items-center justify-center px-4">
+    <div class="text-center">
+      <h1 class="text-2xl font-bold mb-3">Sign in to continue</h1>
+      <div class="flex gap-3 justify-center">
+        <a href="login.html" class="px-6 py-3 rounded-full bg-esu-600 text-white font-semibold">Sign in</a>
+        <a href="join.html" class="px-6 py-3 rounded-full border border-esu-600 text-esu-700 font-semibold">Join</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard-main" class="hidden">
+    <!-- Top bar -->
+    <div class="bg-esu-900 text-white/80 text-xs py-2">
+      <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <span>Eccentric Souls in Unity · Margate, FL</span>
+        <span id="top-name" class="hidden sm:inline"></span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <header class="bg-esu-800 text-white sticky top-0 z-50 shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 md:h-18">
+          <a href="dashboard.html" class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-full bg-esu-500 flex items-center justify-center">
+              <span class="font-bold text-sm">ESU</span>
+            </div>
+            <span class="font-bold text-lg">ESU<span class="text-esu-400">.</span></span>
+          </a>
+          <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-white/85">
+            <a href="#home" class="text-white">Home</a>
+            <a href="#support" class="hover:text-white transition">Support</a>
+            <a href="#requests" class="hover:text-white transition">Requests</a>
+            <a href="#offers" class="hover:text-white transition">Offers</a>
+            <a href="#causes" class="hover:text-white transition">Causes</a>
+          </nav>
+          <div class="flex items-center gap-3">
+            <button onclick="showPanel('ask')" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-esu-800 text-sm font-semibold hover:bg-esu-50 transition">
+              Ask for help
+            </button>
+            <button id="logout-btn" class="text-sm px-3 py-1.5 rounded-full border border-white/25 hover:bg-white/10 transition">Sign out</button>
           </div>
-          <span class="font-bold text-lg hidden sm:inline">ESU<span class="text-esu-400">.</span> Member Area</span>
-        </a>
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-white/80">
-          <a href="dashboard.html" class="text-white">Dashboard</a>
-          <a href="#requests" class="hover:text-white">Requests</a>
-          <a href="#offers" class="hover:text-white">Offers</a>
-        </nav>
-        <div class="flex items-center gap-3">
-          <span id="member-name" class="text-sm text-white/70 hidden sm:inline">…</span>
-          <button id="logout-btn" class="text-sm font-medium px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition">Sign out</button>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <div id="auth-loading" class="flex-1 flex items-center justify-center py-20">
-    <p class="text-gray-500">Loading your Circle account…</p>
-  </div>
-
-  <div id="auth-required" class="hidden flex-1 flex items-center justify-center px-4 py-20">
-    <div class="text-center max-w-md">
-      <h1 class="text-2xl font-bold text-gray-900 mb-3">Sign in to continue</h1>
-      <p class="text-gray-600 mb-6">This area is for Circle members only.</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="login.html" class="px-6 py-3 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Sign in</a>
-        <a href="join.html" class="px-6 py-3 rounded-full border border-esu-600 text-esu-700 font-semibold hover:bg-esu-50">Join the Circle</a>
-      </div>
-    </div>
-  </div>
-
-  <main id="dashboard-main" class="hidden flex-1">
-    <section class="bg-esu-600 text-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
-        <p class="text-esu-100 text-sm font-semibold uppercase tracking-wider mb-1">Welcome to the Circle</p>
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">Hello, <span id="welcome-name">Member</span></h1>
-        <p class="text-esu-100 max-w-xl">When you have, you give. When you need, you receive. No shame. No begging. Just Community.</p>
+    <!-- Hero -->
+    <section id="home" class="hero-bg text-white relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p class="text-esu-300 text-sm font-semibold uppercase tracking-wider mb-3">Member Area</p>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
+              Hello, <span id="welcome-name" class="text-esu-300">Member</span>.<br />
+              The Circle stands with you.
+            </h1>
+            <p class="text-lg text-white/80 max-w-md mb-8 leading-relaxed">
+              When you have, you give. When you need, you receive. No shame. No begging. Just Community.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="showPanel('ask')" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-esu-400 text-esu-950 font-bold hover:bg-esu-300 transition">
+                Ask for support
+              </button>
+              <button onclick="showPanel('offer')" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-white/40 text-white font-semibold hover:bg-white/10 transition">
+                Offer help
+              </button>
+            </div>
+          </div>
+          <div class="relative hidden lg:block h-80">
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=400&q=80" alt="" class="absolute top-0 right-12 w-36 h-36 rounded-full object-cover border-4 border-white/20 shadow-xl" />
+            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=300&q=80" alt="" class="absolute top-24 right-48 w-28 h-28 rounded-full object-cover border-4 border-white/20 shadow-xl" />
+            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=300&q=80" alt="" class="absolute bottom-8 right-8 w-32 h-32 rounded-full object-cover border-4 border-white/20 shadow-xl" />
+            <div class="absolute bottom-0 left-8 w-40 h-40 rounded-full bg-esu-500/30 border-4 border-esu-400/40 flex items-center justify-center backdrop-blur-sm">
+              <span class="text-center text-sm font-bold leading-tight">GIVE<br/>&amp;<br/>RECEIVE</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        <button onclick="showPanel('ask')" class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition text-left group">
-          <div class="w-10 h-10 rounded-lg bg-esu-100 text-esu-600 flex items-center justify-center mb-3 group-hover:bg-esu-500 group-hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+    <!-- Quote + stats -->
+    <section class="bg-white py-14 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-10 items-center mb-14">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" alt="Community" class="rounded-2xl shadow-lg w-full object-cover h-64 md:h-72" />
+            <div class="absolute -bottom-4 -right-2 md:right-4 bg-esu-600 text-white rounded-full w-20 h-20 flex flex-col items-center justify-center text-center shadow-lg">
+              <span class="text-xl font-bold leading-none">ESU</span>
+              <span class="text-[10px] uppercase tracking-wide">Circle</span>
+            </div>
           </div>
-          <h3 class="font-bold text-gray-900">Ask for Support</h3>
-          <p class="text-sm text-gray-500 mt-1">Speak up — the Circle stands with you</p>
-        </button>
-        <button onclick="showPanel('offer')" class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition text-left group">
-          <div class="w-10 h-10 rounded-lg bg-esu-100 text-esu-600 flex items-center justify-center mb-3 group-hover:bg-esu-500 group-hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div>
+            <p class="text-xl md:text-2xl text-gray-700 leading-relaxed font-medium mb-6">
+              Embracing mutual support, we propel towards meaningful transformation — shaping a brighter future with every courageous decision we make.
+            </p>
+            <p class="text-gray-600 leading-relaxed mb-6">
+              You will meet good people who can help you grow in business, career, and life. If you ever need help, you don’t suffer alone. You speak up and the Circle stands with you.
+            </p>
+            <a href="#support" class="inline-flex px-5 py-2.5 rounded-full bg-esu-500 text-white font-semibold text-sm hover:bg-esu-600 transition">Explore how to help</a>
           </div>
-          <h3 class="font-bold text-gray-900">Offer Help</h3>
-          <p class="text-sm text-gray-500 mt-1">Share what you have with the Circle</p>
-        </button>
-        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm text-left opacity-75">
-          <div class="w-10 h-10 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <h3 class="font-bold text-gray-900">Member Directory</h3>
-          <p class="text-sm text-gray-500 mt-1">Coming next</p>
         </div>
-        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm text-left opacity-75">
-          <div class="w-10 h-10 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mb-3">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        <div class="grid grid-cols-3 gap-6 text-center border-t border-gray-100 pt-10">
+          <div>
+            <div class="text-3xl md:text-4xl font-bold text-esu-700">160+</div>
+            <div class="text-sm text-gray-500 mt-1">Organizations</div>
           </div>
-          <h3 class="font-bold text-gray-900">Causes</h3>
-          <p class="text-sm text-gray-500 mt-1">Coming next</p>
+          <div>
+            <div class="text-3xl md:text-4xl font-bold text-esu-700">420</div>
+            <div class="text-sm text-gray-500 mt-1">Individuals</div>
+          </div>
+          <div>
+            <div class="text-3xl md:text-4xl font-bold text-esu-700" id="live-members">—</div>
+            <div class="text-sm text-gray-500 mt-1">In the Circle</div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div id="panel-ask" class="hidden mb-10 bg-white rounded-2xl border border-esu-100 shadow-sm p-6 md:p-8">
-        <div class="flex items-center justify-between mb-5">
-          <h2 class="text-xl font-bold text-gray-900">Ask for Support</h2>
+    <!-- How can you support -->
+    <section id="support" class="bg-gray-50 py-14 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">How can you support<br class="hidden sm:block" /> our Circle?</h2>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-5">
+          <button onclick="showPanel('offer')" class="bg-white rounded-2xl p-6 text-left border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition group">
+            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4 group-hover:bg-esu-500 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="font-bold text-gray-900 text-lg mb-1">Give when you have</h3>
+            <p class="text-sm text-gray-500">Share resources, skills, time, or connections with members who need them.</p>
+          </button>
+          <button onclick="showPanel('ask')" class="bg-white rounded-2xl p-6 text-left border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition group">
+            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4 group-hover:bg-esu-500 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            </div>
+            <h3 class="font-bold text-gray-900 text-lg mb-1">Receive when you need</h3>
+            <p class="text-sm text-gray-500">Speak up. The Circle is here — no shame, no begging.</p>
+          </button>
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <h3 class="font-bold text-gray-900 text-lg mb-1">Grow together</h3>
+            <p class="text-sm text-gray-500">Business, career, and life support from good people in the network.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ask / Offer panels -->
+    <div id="panel-ask" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Ask for Support</h2>
           <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
         </div>
-        <p class="text-gray-600 mb-5 text-sm">Speak up. No shame. The Circle is here for you.</p>
-        <form id="ask-form" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">What do you need?</label>
-            <select id="ask-type" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-esu-500 outline-none">
-              <option>Financial support</option>
-              <option>Career / business advice</option>
-              <option>Mentorship</option>
-              <option>Housing / basic needs</option>
-              <option>Emotional support</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tell the Circle a bit more</label>
-            <textarea id="ask-body" rows="4" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-esu-500 outline-none resize-none" placeholder="Share what you need."></textarea>
-          </div>
+        <form id="ask-form" class="space-y-4 max-w-xl">
+          <select id="ask-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+            <option>Financial support</option>
+            <option>Career / business advice</option>
+            <option>Mentorship</option>
+            <option>Housing / basic needs</option>
+            <option>Emotional support</option>
+            <option>Other</option>
+          </select>
+          <textarea id="ask-body" rows="4" required placeholder="Share what you need…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
           <p id="ask-msg" class="hidden text-sm text-esu-700"></p>
           <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Submit request</button>
         </form>
       </div>
-
-      <div id="panel-offer" class="hidden mb-10 bg-white rounded-2xl border border-esu-100 shadow-sm p-6 md:p-8">
-        <div class="flex items-center justify-between mb-5">
-          <h2 class="text-xl font-bold text-gray-900">Offer Help</h2>
+    </div>
+    <div id="panel-offer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Offer Help</h2>
           <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
         </div>
-        <p class="text-gray-600 mb-5 text-sm">When you have, you give. What can you share?</p>
-        <form id="offer-form" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">What can you offer?</label>
-            <select id="offer-type" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-esu-500 outline-none">
-              <option>Time / volunteering</option>
-              <option>Skills / professional help</option>
-              <option>Financial contribution</option>
-              <option>Mentorship</option>
-              <option>Goods / resources</option>
-              <option>Connections / introductions</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Details</label>
-            <textarea id="offer-body" rows="4" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-esu-500 outline-none resize-none" placeholder="Describe what you can offer."></textarea>
-          </div>
+        <form id="offer-form" class="space-y-4 max-w-xl">
+          <select id="offer-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+            <option>Time / volunteering</option>
+            <option>Skills / professional help</option>
+            <option>Financial contribution</option>
+            <option>Mentorship</option>
+            <option>Goods / resources</option>
+            <option>Connections / introductions</option>
+            <option>Other</option>
+          </select>
+          <textarea id="offer-body" rows="4" required placeholder="Describe what you can offer…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
           <p id="offer-msg" class="hidden text-sm text-esu-700"></p>
           <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Post offer</button>
         </form>
       </div>
+    </div>
 
-      <div class="grid lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6">
-          <div id="requests" class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100">
-              <h2 class="font-bold text-gray-900">Open Support Requests</h2>
-            </div>
-            <div id="requests-list" class="p-6 space-y-4">
-              <p class="text-gray-500 text-sm text-center py-6">Loading…</p>
+    <!-- Mission dark section -->
+    <section class="bg-esu-900 text-white py-16 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-3">The mission of our Circle</h2>
+            <p class="text-white/70 mb-8">Explore the values and promise that guide every act of mutual support.</p>
+            <div class="space-y-3" id="mission-accordion">
+              <details open class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
+                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
+                  Safer community
+                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
+                </summary>
+                <p class="px-5 pb-4 text-sm text-white/70">A trusted space where people can ask for help and offer support without fear or judgment.</p>
+              </details>
+              <details class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
+                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
+                  Community-first giving
+                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
+                </summary>
+                <p class="px-5 pb-4 text-sm text-white/70">Decisions and resources flow from and for the people inside the Circle.</p>
+              </details>
+              <details class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
+                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
+                  Honest & memorable support
+                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
+                </summary>
+                <p class="px-5 pb-4 text-sm text-white/70">We speak plainly about needs. Real help leaves lasting marks.</p>
+              </details>
             </div>
           </div>
-          <div id="offers" class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100">
-              <h2 class="font-bold text-gray-900">Help Being Offered</h2>
-            </div>
-            <div id="offers-list" class="p-6 space-y-4">
-              <p class="text-gray-500 text-sm text-center py-6">Loading…</p>
+          <div class="flex justify-center">
+            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full bg-esu-800 border border-esu-600/40 flex items-center justify-center relative">
+              <div class="text-center">
+                <div class="text-5xl font-bold text-esu-400 mb-1">ESU</div>
+                <div class="text-sm text-white/60">Giving Circle</div>
+              </div>
+              <span class="absolute top-6 right-10 w-3 h-3 rounded-full bg-esu-400"></span>
+              <span class="absolute bottom-16 left-8 w-2.5 h-2.5 rounded-full bg-esu-300"></span>
+              <span class="absolute top-1/2 right-4 w-2 h-2 rounded-full bg-white/50"></span>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="space-y-6">
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-            <div class="flex items-center gap-4 mb-4">
-              <div id="avatar" class="w-14 h-14 rounded-full bg-esu-500 text-white flex items-center justify-center text-xl font-bold">M</div>
-              <div>
-                <div id="profile-name" class="font-bold text-gray-900">Member</div>
-                <div class="text-sm text-esu-600">Circle Member</div>
-              </div>
+    <!-- Live feeds -->
+    <section class="py-14 md:py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-8">
+          <div id="requests">
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">Open support requests</h2>
+            <div id="requests-list" class="space-y-4">
+              <p class="text-gray-500 text-sm py-6 text-center">Loading…</p>
             </div>
-            <dl class="space-y-2 text-sm">
-              <div class="flex justify-between gap-2">
-                <dt class="text-gray-500">Email</dt>
-                <dd id="profile-email" class="text-gray-800 font-medium truncate">—</dd>
-              </div>
-              <div class="flex justify-between gap-2">
-                <dt class="text-gray-500">County</dt>
-                <dd id="profile-county" class="text-gray-800 font-medium">—</dd>
-              </div>
-            </dl>
           </div>
-          <div class="bg-esu-50 rounded-2xl border border-esu-100 p-6">
-            <h3 class="font-bold text-esu-800 mb-2">Our promise</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">If you ever need help or support, you don’t suffer alone. You speak up in the circle and the circle stands with you.</p>
+          <div id="offers">
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">Help being offered</h2>
+            <div id="offers-list" class="space-y-4">
+              <p class="text-gray-500 text-sm py-6 text-center">Loading…</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <footer class="bg-charcoal-950 text-gray-400 py-8 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-sm flex flex-col sm:flex-row justify-between gap-4">
-      <div>Eccentric Souls in Unity · 6219 Coral Lake Dr., Margate, FL 33063</div>
-      <div class="flex gap-4">
-        <a href="index.html" class="hover:text-esu-400">Home</a>
-        <a href="terms.html" class="hover:text-esu-400">Terms</a>
-        <a href="privacy.html" class="hover:text-esu-400">Privacy</a>
+    <!-- Causes -->
+    <section id="causes" class="py-14 md:py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-3xl font-bold text-gray-900">Engage with our causes</h2>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <div class="p-5">
+              <h3 class="font-bold text-gray-900 mb-1">Community empowerment</h3>
+              <p class="text-sm text-gray-500 mb-3">Help people of less circumstance be the best they can be.</p>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:70%"></div></div>
+              <p class="text-xs text-gray-400">Circle priority</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <div class="p-5">
+              <h3 class="font-bold text-gray-900 mb-1">Animals & livelihoods</h3>
+              <p class="text-sm text-gray-500 mb-3">Care for those who have no voice of their own.</p>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:45%"></div></div>
+              <p class="text-xs text-gray-400">Growing focus</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <div class="p-5">
+              <h3 class="font-bold text-gray-900 mb-1">Disaster relief</h3>
+              <p class="text-sm text-gray-500 mb-3">Aid in recovery when communities are hit hardest.</p>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:55%"></div></div>
+              <p class="text-xs text-gray-400">Active need</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <div class="p-5">
+              <h3 class="font-bold text-gray-900 mb-1">Passion into service</h3>
+              <p class="text-sm text-gray-500 mb-3">Turn caring into funded public service.</p>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:30%"></div></div>
+              <p class="text-xs text-gray-400">Building</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </footer>
+    </section>
+
+    <!-- CTA banner -->
+    <section class="bg-esu-700 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold mb-1">Your presence empowers the Circle</h2>
+          <p class="text-esu-100 text-sm">Sponsored & supported by 160+ organizations and 420 individuals.</p>
+        </div>
+        <button onclick="showPanel('offer')" class="px-6 py-3 rounded-full bg-white text-esu-800 font-bold hover:bg-esu-50 transition shrink-0">
+          Offer help today
+        </button>
+      </div>
+    </section>
+
+    <!-- Profile strip -->
+    <section class="bg-white border-t border-gray-100 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center gap-4">
+        <div id="avatar" class="w-12 h-12 rounded-full bg-esu-500 text-white flex items-center justify-center text-lg font-bold">M</div>
+        <div>
+          <div id="profile-name" class="font-bold text-gray-900">Member</div>
+          <div class="text-sm text-gray-500"><span id="profile-email">—</span> · <span id="profile-county">—</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-esu-950 text-gray-400 py-8">
+      <div class="max-w-7xl mx-auto px-4 text-sm flex flex-col sm:flex-row justify-between gap-4">
+        <div>Eccentric Souls in Unity · 6219 Coral Lake Dr., Margate, FL 33063</div>
+        <div class="flex gap-4">
+          <a href="index.html" class="hover:text-esu-400">Public site</a>
+          <a href="terms.html" class="hover:text-esu-400">Terms</a>
+          <a href="privacy.html" class="hover:text-esu-400">Privacy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
 
   <script type="module">
     import {
-      auth, db,
-      onAuthStateChanged, signOut,
-      doc, getDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+      auth, db, onAuthStateChanged, signOut,
+      doc, getDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, getCountFromServer
     } from './js/firebase.js';
 
-    let currentUser = null;
-    let memberProfile = null;
+    let currentUser = null, memberProfile = null;
 
-    window.showPanel = function(which) {
+    window.showPanel = function(w) {
       hidePanels();
-      document.getElementById('panel-' + which).classList.remove('hidden');
-      document.getElementById('panel-' + which).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('panel-' + w).classList.remove('hidden');
+      document.getElementById('panel-' + w).scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
     window.hidePanels = function() {
       document.getElementById('panel-ask').classList.add('hidden');
       document.getElementById('panel-offer').classList.add('hidden');
     };
 
-    function showDashboard() {
+    function showDash() {
       document.getElementById('auth-loading').classList.add('hidden');
       document.getElementById('auth-required').classList.add('hidden');
       document.getElementById('dashboard-main').classList.remove('hidden');
     }
-    function showAuthRequired() {
+    function showAuth() {
       document.getElementById('auth-loading').classList.add('hidden');
       document.getElementById('dashboard-main').classList.add('hidden');
       document.getElementById('auth-required').classList.remove('hidden');
@@ -252,76 +408,50 @@
 
     function fillProfile(m) {
       const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Member';
-      const initial = (m.firstName || 'M').charAt(0).toUpperCase();
       document.getElementById('welcome-name').textContent = m.firstName || 'Member';
-      document.getElementById('member-name').textContent = name;
+      document.getElementById('top-name').textContent = name;
       document.getElementById('profile-name').textContent = name;
-      document.getElementById('avatar').textContent = initial;
+      document.getElementById('avatar').textContent = (m.firstName || 'M').charAt(0).toUpperCase();
       document.getElementById('profile-email').textContent = m.email || '—';
       document.getElementById('profile-county').textContent = m.county || '—';
     }
 
-    function renderList(elId, items, emptyText) {
-      const el = document.getElementById(elId);
-      if (!items.length) {
-        el.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">' + emptyText + '</p>';
-        return;
-      }
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    function renderList(id, items, empty) {
+      const el = document.getElementById(id);
+      if (!items.length) { el.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">' + empty + '</p>'; return; }
       el.innerHTML = items.map(item => {
         const when = item.createdAt && item.createdAt.toDate ? item.createdAt.toDate().toLocaleString() : '';
-        return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition">' +
-          '<div class="flex items-start justify-between gap-3 mb-2">' +
-          '<span class="text-xs font-semibold uppercase tracking-wide text-esu-600 bg-esu-50 px-2 py-0.5 rounded">' + (item.type || '') + '</span>' +
+        return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition bg-gray-50/50">' +
+          '<div class="flex justify-between gap-2 mb-2"><span class="text-xs font-semibold uppercase text-esu-600 bg-esu-50 px-2 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
           '<span class="text-xs text-gray-400">' + when + '</span></div>' +
-          '<p class="text-gray-800 text-sm leading-relaxed">' + escapeHtml(item.body || '') + '</p>' +
-          '<p class="text-xs text-gray-500 mt-2">From ' + escapeHtml(item.authorName || 'Member') + '</p></div>';
+          '<p class="text-sm text-gray-800 leading-relaxed">' + esc(item.body || '') + '</p>' +
+          '<p class="text-xs text-gray-500 mt-2">From ' + esc(item.authorName || 'Member') + '</p></div>';
       }).join('');
     }
 
-    function escapeHtml(s) {
-      const d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
     function listenFeeds() {
-      const reqQ = query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(30));
-      onSnapshot(reqQ, (snap) => {
-        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-        renderList('requests-list', items, 'No open requests yet. Be the first to speak up.');
-      }, () => {
-        document.getElementById('requests-list').innerHTML = '<p class="text-gray-500 text-sm text-center py-6">Unable to load requests. Check Firestore rules.</p>';
-      });
-
-      const offQ = query(collection(db, 'offers'), orderBy('createdAt', 'desc'), limit(30));
-      onSnapshot(offQ, (snap) => {
-        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-        renderList('offers-list', items, 'No offers yet. Share what you can give.');
-      }, () => {
-        document.getElementById('offers-list').innerHTML = '<p class="text-gray-500 text-sm text-center py-6">Unable to load offers. Check Firestore rules.</p>';
-      });
+      onSnapshot(query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(20)), snap => {
+        renderList('requests-list', snap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'No open requests yet. Be the first to speak up.');
+      }, () => { document.getElementById('requests-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>'; });
+      onSnapshot(query(collection(db, 'offers'), orderBy('createdAt', 'desc'), limit(20)), snap => {
+        renderList('offers-list', snap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'No offers yet. Share what you can give.');
+      }, () => { document.getElementById('offers-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>'; });
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        showAuthRequired();
-        return;
-      }
+      if (!user) { showAuth(); return; }
       currentUser = user;
       try {
         const snap = await getDoc(doc(db, 'members', user.uid));
-        memberProfile = snap.exists() ? snap.data() : {
-          firstName: (user.displayName || 'Member').split(' ')[0],
-          lastName: (user.displayName || '').split(' ').slice(1).join(' '),
-          email: user.email
-        };
+        memberProfile = snap.exists() ? snap.data() : { firstName: user.displayName || 'Member', email: user.email };
         fillProfile(memberProfile);
-        showDashboard();
+        showDash();
         listenFeeds();
       } catch (e) {
-        console.error(e);
         fillProfile({ firstName: user.displayName || 'Member', email: user.email });
-        showDashboard();
+        showDash();
         listenFeeds();
       }
     });
@@ -332,53 +462,26 @@
       window.location.href = 'index.html';
     });
 
-    document.getElementById('ask-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function postItem(col, typeId, bodyId, msgId) {
       if (!currentUser) return;
-      const body = document.getElementById('ask-body').value.trim();
+      const body = document.getElementById(bodyId).value.trim();
       if (!body) return;
-      const type = document.getElementById('ask-type').value;
       const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
       try {
-        await addDoc(collection(db, 'requests'), {
-          type: type, body: body,
-          authorId: currentUser.uid,
-          authorName: name,
-          createdAt: serverTimestamp()
+        await addDoc(collection(db, col), {
+          type: document.getElementById(typeId).value, body,
+          authorId: currentUser.uid, authorName: name, createdAt: serverTimestamp()
         });
-        document.getElementById('ask-msg').textContent = 'Request posted to the Circle.';
-        document.getElementById('ask-msg').classList.remove('hidden');
-        document.getElementById('ask-body').value = '';
-        setTimeout(hidePanels, 1200);
+        document.getElementById(msgId).textContent = 'Posted to the Circle.';
+        document.getElementById(msgId).classList.remove('hidden');
+        document.getElementById(bodyId).value = '';
+        setTimeout(hidePanels, 1000);
       } catch (err) {
-        alert('Could not post request. Enable Firestore and set rules for signed-in users.');
-        console.error(err);
+        alert('Could not post. Check Firestore rules for signed-in writes.');
       }
-    });
-
-    document.getElementById('offer-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-      const body = document.getElementById('offer-body').value.trim();
-      if (!body) return;
-      const type = document.getElementById('offer-type').value;
-      const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
-      try {
-        await addDoc(collection(db, 'offers'), {
-          type: type, body: body,
-          authorId: currentUser.uid,
-          authorName: name,
-          createdAt: serverTimestamp()
-        });
-        document.getElementById('offer-msg').textContent = 'Offer posted to the Circle.';
-        document.getElementById('offer-msg').classList.remove('hidden');
-        document.getElementById('offer-body').value = '';
-        setTimeout(hidePanels, 1200);
-      } catch (err) {
-        alert('Could not post offer. Enable Firestore and set rules for signed-in users.');
-        console.error(err);
-      }
-    });
+    }
+    document.getElementById('ask-form').addEventListener('submit', e => { e.preventDefault(); postItem('requests', 'ask-type', 'ask-body', 'ask-msg'); });
+    document.getElementById('offer-form').addEventListener('submit', e => { e.preventDefault(); postItem('offers', 'offer-type', 'offer-body', 'offer-msg'); });
   </script>
 </body>
 </html>
