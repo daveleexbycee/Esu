@@ -23,6 +23,11 @@
               800: '#166534',
               900: '#14532d',
               950: '#052e16',
+            },
+            charcoal: {
+              800: '#1a1f2e',
+              900: '#0f131c',
+              950: '#0a0d14',
             }
           },
           fontFamily: {
@@ -34,75 +39,119 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .gradient-green { background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%); }
-    .hero-pattern {
-      background-image: radial-gradient(circle at 20% 50%, rgba(34,197,94,0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(22,163,74,0.06) 0%, transparent 40%);
+    .hero-overlay {
+      background: linear-gradient(105deg, rgba(15,19,28,0.92) 0%, rgba(15,19,28,0.55) 45%, rgba(15,19,28,0.25) 100%);
     }
+    .feature-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
   </style>
 </head>
 <body class="bg-white text-gray-800 antialiased">
 
-  <!-- Navigation -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-esu-100 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- Dark Navigation (reference style) -->
+  <header class="absolute top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 md:h-20">
-        <a href="index.html" class="flex items-center gap-3 group">
-          <!-- Logo -->
-          <div class="w-11 h-11 md:w-12 md:h-12 rounded-full gradient-green flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <span class="text-white font-bold text-lg tracking-tight">ESU</span>
+        <a href="index.html" class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-full bg-esu-500 flex items-center justify-center shadow-lg">
+            <span class="text-white font-bold text-sm tracking-tight">ESU</span>
           </div>
-          <div class="hidden sm:block">
-            <div class="font-bold text-esu-800 text-lg leading-tight">Eccentric Souls in Unity</div>
-            <div class="text-xs text-esu-600 font-medium -mt-0.5">Green</div>
-          </div>
+          <span class="text-white font-bold text-xl tracking-tight hidden sm:inline">ESU<span class="text-esu-400">.</span></span>
         </a>
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
-          <a href="index.html" class="text-esu-700 hover:text-esu-900 transition">Home</a>
-          <a href="about.html" class="text-gray-600 hover:text-esu-700 transition">About & Philosophy</a>
-          <a href="join.html" class="text-gray-600 hover:text-esu-700 transition">Join the Circle</a>
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-white/90">
+          <a href="index.html" class="text-white border-b-2 border-esu-400 pb-0.5">Home</a>
+          <a href="about.html" class="hover:text-white transition">About Us</a>
+          <a href="about.html#philosophy" class="hover:text-white transition">Philosophy</a>
+          <a href="join.html" class="hover:text-white transition">Join</a>
         </nav>
-        <a href="join.html" class="inline-flex items-center px-5 py-2.5 rounded-full bg-esu-600 text-white text-sm font-semibold shadow-md hover:bg-esu-700 hover:shadow-lg transition-all">
+        <a href="join.html" class="inline-flex items-center px-5 py-2.5 rounded-full bg-esu-500 text-white text-sm font-semibold shadow-lg hover:bg-esu-400 transition-all">
           Join the Circle
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero-pattern relative overflow-hidden">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 md:pt-24 md:pb-28">
-      <div class="text-center max-w-3xl mx-auto">
-        <!-- Logo mark -->
-        <div class="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full gradient-green shadow-xl mb-6">
-          <span class="text-white font-extrabold text-2xl md:text-3xl tracking-tight">ESU</span>
-        </div>
-        <p class="text-esu-600 font-semibold text-sm uppercase tracking-wider mb-3">Eccentric Souls in Unity</p>
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-4">
-          A place where good people<br class="hidden sm:block" /> help each other
+  <!-- Hero (reference style: full-bleed photo + bold text) -->
+  <section class="relative min-h-[85vh] md:min-h-[90vh] flex items-center bg-charcoal-900 overflow-hidden">
+    <div class="absolute inset-0">
+      <img
+        src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1920&q=80"
+        alt="Community helping each other"
+        class="w-full h-full object-cover object-center opacity-60"
+      />
+      <div class="absolute inset-0 hero-overlay"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-32 md:pb-40">
+      <div class="max-w-xl">
+        <p class="text-esu-400 font-semibold text-sm uppercase tracking-widest mb-4">Eccentric Souls in Unity</p>
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-[0.95] tracking-tight mb-5">
+          JOIN THE<br />CIRCLE
         </h1>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-          We are everyday people — traders, public workers, creatives, and organizations — who decided that help should not be hard to find.
+        <p class="text-xl md:text-2xl text-white/85 font-medium mb-8 max-w-md">
+          A place where good people help each other
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="join.html" class="inline-flex items-center justify-center px-8 py-4 rounded-full bg-esu-600 text-white text-lg font-semibold shadow-lg hover:bg-esu-700 hover:shadow-xl transition-all">
-            Join the Circle
+        <div class="flex flex-wrap gap-4">
+          <a href="join.html" class="inline-flex items-center px-8 py-3.5 rounded-full bg-esu-500 text-white text-base font-bold shadow-xl hover:bg-esu-400 transition-all">
+            Join Now
           </a>
-          <a href="about.html" class="inline-flex items-center justify-center px-8 py-4 rounded-full border-2 border-esu-200 text-esu-800 text-lg font-semibold hover:bg-esu-50 transition-all">
-            Our Philosophy
+          <a href="about.html" class="inline-flex items-center px-8 py-3.5 rounded-full border-2 border-white/40 text-white text-base font-semibold hover:bg-white/10 transition-all">
+            Our Story
           </a>
         </div>
       </div>
     </div>
+
+    <!-- Feature cards strip (overlapping hero like the reference) -->
+    <div class="absolute bottom-0 left-0 right-0 translate-y-1/2 z-20 px-4">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-0 rounded-xl overflow-hidden shadow-2xl">
+        <a href="join.html" class="feature-card bg-esu-500 text-white p-6 md:p-8 flex items-start gap-4 hover:bg-esu-400 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-1">GIVE WHEN YOU HAVE</h3>
+            <p class="text-sm text-white/90">Share resources, skills & support with the Circle</p>
+            <span class="inline-block mt-3 text-xs font-semibold uppercase tracking-wider text-white/80">Learn More →</span>
+          </div>
+        </a>
+        <a href="join.html" class="feature-card bg-esu-600 text-white p-6 md:p-8 flex items-start gap-4 hover:bg-esu-500 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-1">RECEIVE WHEN YOU NEED</h3>
+            <p class="text-sm text-white/90">Speak up — the Circle stands with you</p>
+            <span class="inline-block mt-3 text-xs font-semibold uppercase tracking-wider text-white/80">Learn More →</span>
+          </div>
+        </a>
+        <a href="about.html" class="feature-card bg-esu-700 text-white p-6 md:p-8 flex items-start gap-4 hover:bg-esu-600 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg mb-1">GROW TOGETHER</h3>
+            <p class="text-sm text-white/90">Business, career & life support from good people</p>
+            <span class="inline-block mt-3 text-xs font-semibold uppercase tracking-wider text-white/80">Learn More →</span>
+          </div>
+        </a>
+      </div>
+    </div>
   </section>
 
+  <!-- Spacer for overlapping cards -->
+  <div class="h-28 md:h-24 bg-white"></div>
+
   <!-- Short powerful description -->
-  <section class="bg-esu-50 border-y border-esu-100">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16 text-center">
-      <p class="text-xl md:text-2xl text-gray-800 leading-relaxed font-medium">
+  <section class="bg-white pt-8 pb-16 md:pb-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <p class="text-2xl md:text-3xl text-gray-800 leading-relaxed font-medium">
+        We are everyday people — traders, public workers, creatives, and organizations — who decided that <span class="text-esu-600 font-semibold">help should not be hard to find</span>.
+      </p>
+      <p class="mt-6 text-xl text-gray-600">
         In this Circle, when you have, you give. When you need, you receive.<br class="hidden sm:block" />
         <span class="text-esu-700 font-semibold">No shame. No begging. Just Community.</span>
       </p>
@@ -110,130 +159,129 @@
   </section>
 
   <!-- Values -->
-  <section class="py-16 md:py-24">
+  <section class="bg-gray-50 py-16 md:py-24">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 md:mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">What We Stand For</h2>
         <p class="text-gray-600 text-lg max-w-2xl mx-auto">These values shape every conversation, every gift, and every act of support inside the Circle.</p>
       </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
           <div class="w-12 h-12 rounded-xl bg-esu-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Safer</h3>
           <p class="text-gray-600 leading-relaxed">A trusted space where people can ask for help and offer support without fear or judgment.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
           <div class="w-12 h-12 rounded-xl bg-esu-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Community-First</h3>
-          <p class="text-gray-600 leading-relaxed">Decisions, care, and resources flow from and for the people inside the Circle — not from outside institutions alone.</p>
+          <p class="text-gray-600 leading-relaxed">Decisions, care, and resources flow from and for the people inside the Circle.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
           <div class="w-12 h-12 rounded-xl bg-esu-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Honest</h3>
           <p class="text-gray-600 leading-relaxed">We speak plainly about needs and resources. Transparency builds the trust that makes mutual aid work.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
           <div class="w-12 h-12 rounded-xl bg-esu-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Memorable</h3>
-          <p class="text-gray-600 leading-relaxed">Experiences of real help leave lasting marks. We aim for relationships and impact people remember for years.</p>
+          <p class="text-gray-600 leading-relaxed">Experiences of real help leave lasting marks. We aim for relationships and impact people remember.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+        <div class="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
           <div class="w-12 h-12 rounded-xl bg-esu-100 flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-esu-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">Attracts Great Unity Creatives & Community</h3>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Unity Creatives & Community</h3>
           <p class="text-gray-600 leading-relaxed">We welcome artists, builders, organizers, and everyday helpers who want to create change together.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- How it works / Giving Circle -->
-  <section class="bg-gray-50 py-16 md:py-24">
+  <!-- How it works -->
+  <section class="py-16 md:py-24 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12 md:mb-16">
+      <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">How a Giving Circle Works</h2>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">Simple, human, and powerful.</p>
+        <p class="text-gray-600 text-lg">Simple, human, and powerful.</p>
       </div>
-      <div class="max-w-3xl mx-auto space-y-8">
-        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
+      <div class="max-w-3xl mx-auto mb-12">
+        <div class="bg-esu-50 rounded-2xl p-8 border border-esu-100">
           <p class="text-lg text-gray-700 leading-relaxed mb-4">
-            This is a giving network. You will meet good people who can help you grow in business, career, and life. If you ever need help or support, you don’t suffer alone. You speak up in the circle and the circle stands with you. That’s our promise.
+            This is a giving network. You will meet good people who can help you grow in business, career, and life. If you ever need help or support, you don’t suffer alone. You speak up in the circle and the circle stands with you. <strong class="text-esu-700">That’s our promise.</strong>
           </p>
           <p class="text-lg text-gray-700 leading-relaxed">
             A giving Circle is a group of people with shared values that get together to create change. They decide on a cause that they care about.
           </p>
         </div>
-        <div class="grid sm:grid-cols-3 gap-6 text-center">
-          <div class="bg-white rounded-xl p-6 border border-esu-100">
-            <div class="text-3xl font-bold text-esu-600 mb-2">1</div>
-            <h3 class="font-semibold text-gray-900 mb-1">Join</h3>
-            <p class="text-sm text-gray-600">Become a member of the Circle</p>
-          </div>
-          <div class="bg-white rounded-xl p-6 border border-esu-100">
-            <div class="text-3xl font-bold text-esu-600 mb-2">2</div>
-            <h3 class="font-semibold text-gray-900 mb-1">Give & Receive</h3>
-            <p class="text-sm text-gray-600">When you have, give. When you need, receive.</p>
-          </div>
-          <div class="bg-white rounded-xl p-6 border border-esu-100">
-            <div class="text-3xl font-bold text-esu-600 mb-2">3</div>
-            <h3 class="font-semibold text-gray-900 mb-1">Grow Together</h3>
-            <p class="text-sm text-gray-600">Support each other in business, career & life</p>
-          </div>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-6 text-center">
+        <div class="bg-white rounded-2xl p-8 border-2 border-esu-100 shadow-sm">
+          <div class="w-14 h-14 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+          <h3 class="font-bold text-gray-900 text-lg mb-2">Join</h3>
+          <p class="text-gray-600 text-sm">Become a member of the Circle</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 border-2 border-esu-100 shadow-sm">
+          <div class="w-14 h-14 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+          <h3 class="font-bold text-gray-900 text-lg mb-2">Give & Receive</h3>
+          <p class="text-gray-600 text-sm">When you have, give. When you need, receive.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 border-2 border-esu-100 shadow-sm">
+          <div class="w-14 h-14 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+          <h3 class="font-bold text-gray-900 text-lg mb-2">Grow Together</h3>
+          <p class="text-gray-600 text-sm">Support each other in business, career & life</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Impact / Purpose -->
-  <section class="py-16 md:py-24">
+  <section class="py-16 md:py-24 bg-charcoal-900 text-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Purpose</h2>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Purpose</h2>
+        <p class="text-lg text-white/80 max-w-3xl mx-auto leading-relaxed">
           There are thousands of founders local and abroad. When we shift the power of philanthropy into all of our voices, we change who gives, how we give, and ultimately what gets funded. Giving by, for, and with the community we represent is the future of philanthropy.
         </p>
       </div>
       <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <div class="bg-esu-50 rounded-2xl p-8 border border-esu-100">
-          <h3 class="text-xl font-bold text-esu-800 mb-3">Reaching the neglected</h3>
-          <p class="text-gray-700 leading-relaxed">
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-esu-400 mb-3">Reaching the neglected</h3>
+          <p class="text-white/80 leading-relaxed">
             Reaching those who are neglected, disempowered, and don’t have a voice. Maybe you desire to help animals and livelihoods, or to aid in disaster relief and recovery.
           </p>
         </div>
-        <div class="bg-esu-50 rounded-2xl p-8 border border-esu-100">
-          <h3 class="text-xl font-bold text-esu-800 mb-3">Passion into funded service</h3>
-          <p class="text-gray-700 leading-relaxed">
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-esu-400 mb-3">Passion into funded service</h3>
+          <p class="text-white/80 leading-relaxed">
             Most importantly: do you want to learn how to turn this passion into actual service that serves the public and receive the grand funding to make it happen?
           </p>
         </div>
       </div>
-      <p class="text-center text-lg text-gray-700 mt-10 max-w-2xl mx-auto font-medium">
+      <p class="text-center text-lg text-white/90 mt-10 max-w-2xl mx-auto font-medium">
         Are you passionate about helping people? Do you have a dream to let people of less circumstance be the best they can be?
       </p>
     </div>
   </section>
 
   <!-- Social proof -->
-  <section class="bg-esu-800 text-white py-14 md:py-16">
+  <section class="bg-esu-600 text-white py-12 md:py-14">
     <div class="max-w-4xl mx-auto px-4 text-center">
-      <p class="text-esu-200 text-sm font-semibold uppercase tracking-wider mb-3">Trusted by many</p>
-      <p class="text-2xl md:text-3xl font-bold leading-snug">
-        Sponsored & supported by<br class="sm:hidden" />
-        <span class="text-esu-300">160+ Organizations</span> and <span class="text-esu-300">420 Individuals</span>
+      <p class="text-esu-100 text-sm font-semibold uppercase tracking-wider mb-2">Trusted by many</p>
+      <p class="text-2xl md:text-3xl font-bold">
+        Sponsored & supported by <span class="text-white">160+ Organizations</span> and <span class="text-white">420 Individuals</span>
       </p>
     </div>
   </section>
 
-  <!-- Placeholder future features -->
+  <!-- Coming soon -->
   <section class="py-16 md:py-20 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-10">
@@ -242,19 +290,19 @@
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <div class="bg-white rounded-xl p-5 border border-dashed border-gray-200 text-center">
-          <div class="text-esu-500 font-semibold mb-1">Member Directory</div>
+          <div class="text-esu-600 font-semibold mb-1">Member Directory</div>
           <p class="text-sm text-gray-500">Connect with fellow Circle members</p>
         </div>
         <div class="bg-white rounded-xl p-5 border border-dashed border-gray-200 text-center">
-          <div class="text-esu-500 font-semibold mb-1">Cause Selection</div>
+          <div class="text-esu-600 font-semibold mb-1">Cause Selection</div>
           <p class="text-sm text-gray-500">Vote on the causes we fund together</p>
         </div>
         <div class="bg-white rounded-xl p-5 border border-dashed border-gray-200 text-center">
-          <div class="text-esu-500 font-semibold mb-1">Success Stories</div>
+          <div class="text-esu-600 font-semibold mb-1">Success Stories</div>
           <p class="text-sm text-gray-500">See the real impact of mutual support</p>
         </div>
         <div class="bg-white rounded-xl p-5 border border-dashed border-gray-200 text-center">
-          <div class="text-esu-500 font-semibold mb-1">Circle Gatherings</div>
+          <div class="text-esu-600 font-semibold mb-1">Circle Gatherings</div>
           <p class="text-sm text-gray-500">Local and virtual meet-ups</p>
         </div>
       </div>
@@ -262,25 +310,25 @@
   </section>
 
   <!-- Final CTA -->
-  <section class="py-16 md:py-24">
+  <section class="py-16 md:py-24 bg-white">
     <div class="max-w-3xl mx-auto px-4 text-center">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ready to stand with good people?</h2>
       <p class="text-lg text-gray-600 mb-8 leading-relaxed">
         Join Eccentric Souls in Unity. Speak up when you need help. Show up when others need you. That’s the promise of the Circle.
       </p>
-      <a href="join.html" class="inline-flex items-center justify-center px-10 py-4 rounded-full bg-esu-600 text-white text-lg font-semibold shadow-lg hover:bg-esu-700 hover:shadow-xl transition-all">
+      <a href="join.html" class="inline-flex items-center justify-center px-10 py-4 rounded-full bg-esu-500 text-white text-lg font-bold shadow-lg hover:bg-esu-600 hover:shadow-xl transition-all">
         Sign Up — Join the Circle
       </a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-gray-300 py-12">
+  <footer class="bg-charcoal-950 text-gray-400 py-12">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
         <div>
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-full gradient-green flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-esu-500 flex items-center justify-center">
               <span class="text-white font-bold text-sm">ESU</span>
             </div>
             <div>
@@ -300,6 +348,7 @@
               <li><a href="index.html" class="hover:text-esu-400 transition">Home</a></li>
               <li><a href="about.html" class="hover:text-esu-400 transition">About & Philosophy</a></li>
               <li><a href="join.html" class="hover:text-esu-400 transition">Join the Circle</a></li>
+              <li><a href="dashboard.html" class="hover:text-esu-400 transition">Member Area</a></li>
             </ul>
           </div>
           <div>
@@ -311,7 +360,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-10 pt-6 border-t border-gray-800 text-sm text-gray-500 text-center md:text-left">
+      <div class="mt-10 pt-6 border-t border-white/10 text-sm text-gray-500 text-center md:text-left">
         &copy; <span id="year"></span> Eccentric Souls in Unity. All rights reserved.
       </div>
     </div>
