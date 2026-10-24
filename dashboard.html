@@ -107,11 +107,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div class="text-3xl font-bold text-esu-700">160+</div>
+              <div class="text-3xl font-bold text-esu-700">260+</div>
               <div class="text-sm text-gray-500 mt-1">Organizations</div>
             </div>
             <div>
-              <div class="text-3xl font-bold text-esu-700">420</div>
+              <div class="text-3xl font-bold text-esu-700">1,420+</div>
               <div class="text-sm text-gray-500 mt-1">Individuals</div>
             </div>
             <div>
@@ -276,12 +276,12 @@
           <div class="flex items-start justify-between gap-4 mb-2">
             <div>
               <h3 class="text-xl font-bold">Payout methods</h3>
-              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (bank transfer, mobile money, PayPal, etc.).</p>
+              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (U.S. bank transfer, Zelle, PayPal, Cash App, or Venmo).</p>
             </div>
           </div>
 
           <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900 mb-6">
-            <strong>Privacy note:</strong> Your payout details are visible only to you and authorized Circle administrators. They are used solely to send approved support. Never share full account numbers in public requests.
+            <strong>Privacy note:</strong> U.S. banks and payment apps only. Your payout details are visible only to you and authorized Circle administrators. Used solely to send approved support. Never share full account numbers in public requests.
           </div>
 
           <!-- Saved methods list -->
@@ -296,32 +296,49 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Method type</label>
                 <select id="payout-type" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
-                  <option value="bank">Bank transfer</option>
-                  <option value="mobile">Mobile money</option>
+                  <option value="bank">U.S. Bank transfer (ACH)</option>
+                  <option value="zelle">Zelle</option>
                   <option value="paypal">PayPal</option>
                   <option value="cashapp">Cash App</option>
                   <option value="venmo">Venmo</option>
-                  <option value="other">Other</option>
+                  <option value="other">Other (U.S. only)</option>
                 </select>
               </div>
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Account / recipient name</label>
-                  <input id="payout-name" type="text" required placeholder="Name on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Account holder name</label>
+                  <input id="payout-name" type="text" required placeholder="Name exactly as on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank / provider name</label>
-                  <input id="payout-provider" type="text" placeholder="e.g. Chase, GTBank, MTN MoMo" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">U.S. Bank</label>
+                  <select id="payout-provider" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+                    <option value="">Select bank…</option>
+                    <option>Chase</option>
+                    <option>Bank of America</option>
+                    <option>Wells Fargo</option>
+                    <option>Citibank</option>
+                    <option>U.S. Bank</option>
+                    <option>PNC Bank</option>
+                    <option>Capital One</option>
+                    <option>TD Bank</option>
+                    <option>Truist</option>
+                    <option>Goldman Sachs / Marcus</option>
+                    <option>Ally Bank</option>
+                    <option>Discover Bank</option>
+                    <option>Navy Federal Credit Union</option>
+                    <option>Other U.S. bank / credit union</option>
+                    <option value="N/A">N/A (Zelle / PayPal / Cash App / Venmo)</option>
+                  </select>
                 </div>
               </div>
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Account number / ID</label>
-                  <input id="payout-account" type="text" required placeholder="Account number, email, or phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Account number or payment ID</label>
+                  <input id="payout-account" type="text" required placeholder="Account number, email, or $cashtag / phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Routing / Sort / SWIFT (optional)</label>
-                  <input id="payout-routing" type="text" placeholder="Routing number or code" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Routing number (for bank transfer)</label>
+                  <input id="payout-routing" type="text" placeholder="9-digit ABA routing number" maxlength="9" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
               </div>
               <div>
@@ -479,7 +496,7 @@
         return;
       }
       el.innerHTML = methods.map((m, i) => {
-        const typeLabel = { bank: 'Bank transfer', mobile: 'Mobile money', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', other: 'Other' }[m.type] || m.type;
+        const typeLabel = { bank: 'U.S. Bank transfer', zelle: 'Zelle', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', other: 'Other' }[m.type] || m.type;
         return `
           <div class="flex items-start justify-between gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50/80">
             <div>
