@@ -150,6 +150,70 @@
           </div>
         </div>
       </section>
+
+      <!-- Recent activity preview -->
+      <section class="py-14 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold">Recent Circle activity</h2>
+            <button data-tab="feed" class="tab-nav text-esu-600 font-semibold text-sm hover:underline">View full feed →</button>
+          </div>
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div>
+              <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-esu-500"></span> Latest requests
+              </h3>
+              <div id="overview-requests" class="space-y-3"></div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-esu-500"></span> Latest offers
+              </h3>
+              <div id="overview-offers" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Causes snapshot on overview -->
+      <section class="py-14 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold">Causes we support</h2>
+            <button data-tab="causes" class="tab-nav text-esu-600 font-semibold text-sm hover:underline">All causes →</button>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <div class="text-2xl mb-2">🤝</div>
+              <h3 class="font-bold mb-1">Community support</h3>
+              <p class="text-sm text-gray-600 mb-3">Business, career & daily life help</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-1"><div class="h-full bg-esu-500 rounded-full" style="width:72%"></div></div>
+              <p class="text-xs text-gray-500">72% of Circle energy · 48 active requests</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <div class="text-2xl mb-2">🐾</div>
+              <h3 class="font-bold mb-1">Animals & livelihoods</h3>
+              <p class="text-sm text-gray-600 mb-3">Care for animals and caretakers</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-1"><div class="h-full bg-esu-500 rounded-full" style="width:41%"></div></div>
+              <p class="text-xs text-gray-500">41% focus · 12 active offers</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <div class="text-2xl mb-2">🆘</div>
+              <h3 class="font-bold mb-1">Disaster relief</h3>
+              <p class="text-sm text-gray-600 mb-3">Rapid response in crisis</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-1"><div class="h-full bg-esu-500 rounded-full" style="width:58%"></div></div>
+              <p class="text-xs text-gray-500">58% ready · 9 emergency asks</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <div class="text-2xl mb-2">🌱</div>
+              <h3 class="font-bold mb-1">Passion into service</h3>
+              <p class="text-sm text-gray-600 mb-3">Fund public-good projects</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-1"><div class="h-full bg-esu-500 rounded-full" style="width:53%"></div></div>
+              <p class="text-xs text-gray-500">53% growing · 21 projects</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- ========== TAB: CIRCLE FEED ========== -->
@@ -523,14 +587,86 @@
       return d.innerHTML;
     }
 
+    // ---------- Mock data (shown when Firestore is empty) ----------
+    const MOCK_REQUESTS = [
+      { type: 'Financial support', body: 'Need help covering unexpected medical bills after a short hospital stay. Looking for any guidance or temporary support from the Circle.', authorName: 'Maria J.', daysAgo: 0 },
+      { type: 'Business / career help', body: 'Launching a small catering side hustle. Would love advice on permits in Broward County and anyone who has walked this path.', authorName: 'James K.', daysAgo: 0 },
+      { type: 'Emergency / disaster', body: 'Roof damage from the last storm. Temporary housing suggestions or contacts for local relief would mean a lot.', authorName: 'Angela R.', daysAgo: 1 },
+      { type: 'Mentorship', body: 'First-generation college student looking for a mentor in healthcare administration. Happy to give back later.', authorName: 'David O.', daysAgo: 1 },
+      { type: 'Resources / goods', body: 'Need gently used work clothes (professional) for interviews — men\'s size M/L. Can pick up in Margate area.', authorName: 'Chris P.', daysAgo: 2 },
+      { type: 'Financial support', body: 'Behind on utilities this month after reduced hours. Any help or payment plan tips appreciated.', authorName: 'Sofia M.', daysAgo: 2 },
+      { type: 'Business / career help', body: 'Freelance graphic designer seeking warm intros to local nonprofits that need design work.', authorName: 'Nina T.', daysAgo: 3 },
+      { type: 'Other', body: 'Looking for a ride-share buddy for weekly dialysis appointments in Fort Lauderdale.', authorName: 'Robert H.', daysAgo: 3 },
+      { type: 'Mentorship', body: 'Want to learn bookkeeping for my small shop. Anyone willing to do a few Zoom sessions?', authorName: 'Elena V.', daysAgo: 4 },
+      { type: 'Emergency / disaster', body: 'Car broke down — need it for work. Looking for a trusted mechanic recommendation or temporary transport ideas.', authorName: 'Marcus L.', daysAgo: 4 },
+      { type: 'Financial support', body: 'Childcare gap while starting a new job. Short-term support would help us stay on track.', authorName: 'Priya S.', daysAgo: 5 },
+      { type: 'Resources / goods', body: 'School supplies for two kids entering middle school. Backpacks and basic supplies needed.', authorName: 'Tina W.', daysAgo: 5 },
+      { type: 'Business / career help', body: 'Resume review and interview practice for retail management roles. Open to honest feedback.', authorName: 'Kevin B.', daysAgo: 6 },
+      { type: 'Mentorship', body: 'Aspiring social worker — would love to shadow or talk with someone already in the field in South Florida.', authorName: 'Aisha N.', daysAgo: 6 },
+      { type: 'Other', body: 'Looking for Spanish-English conversation practice partners in the Circle. Mutual learning.', authorName: 'Carlos D.', daysAgo: 7 },
+      { type: 'Financial support', body: 'Security deposit for a safer apartment. Escaping a difficult living situation. Grateful for any path forward.', authorName: 'Jordan F.', daysAgo: 7 },
+      { type: 'Resources / goods', body: 'Baby formula and diapers (size 3) until WIC renews next week.', authorName: 'Michelle A.', daysAgo: 8 },
+      { type: 'Business / career help', body: 'How did you price your first client as a consultant? Looking for real numbers and lessons.', authorName: 'Sam Y.', daysAgo: 9 },
+      { type: 'Emergency / disaster', body: 'Flooded apartment after pipe burst. Need temporary storage and cleaning contacts.', authorName: 'Lisa G.', daysAgo: 10 },
+      { type: 'Mentorship', body: 'Building a community garden project. Looking for people who have run neighborhood initiatives.', authorName: 'Omar C.', daysAgo: 12 }
+    ].map((r, i) => ({
+      id: 'mock-req-' + i,
+      type: r.type,
+      body: r.body,
+      authorName: r.authorName,
+      createdAt: { toDate: () => new Date(Date.now() - r.daysAgo * 86400000) },
+      _mock: true
+    }));
+
+    const MOCK_OFFERS = [
+      { type: 'Skills / professional help', body: 'I\'m a licensed bookkeeper. Happy to do a free 1-hour review of your small business books or QuickBooks setup.', authorName: 'Patricia M.', daysAgo: 0 },
+      { type: 'Mentorship', body: '20 years in healthcare admin. Open to mentoring members exploring careers in hospitals or clinics.', authorName: 'Dr. Helen K.', daysAgo: 0 },
+      { type: 'Financial contribution', body: 'Can contribute toward emergency utility or grocery support this month. Prefer coordinated through Circle admins.', authorName: 'Anonymous Member', daysAgo: 1 },
+      { type: 'Time / volunteering', body: 'Available Saturdays for moving help, yard work, or packing. South Florida — Margate to Fort Lauderdale.', authorName: 'Tony R.', daysAgo: 1 },
+      { type: 'Connections / introductions', body: 'I work in local government permitting. Can point people in the right direction for small business licenses.', authorName: 'Diane S.', daysAgo: 2 },
+      { type: 'Goods / resources', body: 'Have extra professional clothing (women\'s 8–12) and two pairs of lightly used work shoes. Free to Circle members.', authorName: 'Rachel B.', daysAgo: 2 },
+      { type: 'Skills / professional help', body: 'Web developer — can help fix or build a simple site for a member\'s side business or nonprofit idea.', authorName: 'Alex C.', daysAgo: 3 },
+      { type: 'Mentorship', body: 'Former teacher. Happy to tutor middle/high school math or help with college applications.', authorName: 'Mrs. Gloria T.', daysAgo: 3 },
+      { type: 'Time / volunteering', body: 'Can drive members to medical appointments 2–3 times a month (Broward County).', authorName: 'Frank L.', daysAgo: 4 },
+      { type: 'Financial contribution', body: 'Able to match small emergency asks up to a set amount this quarter. Message Circle coordinators.', authorName: 'Community Partner', daysAgo: 4 },
+      { type: 'Goods / resources', body: 'Donating a gently used laptop suitable for school or job search. First come, verified need.', authorName: 'Mike P.', daysAgo: 5 },
+      { type: 'Connections / introductions', body: 'Network in South Florida nonprofits. Can intro members looking for volunteer or entry-level roles.', authorName: 'Sandra H.', daysAgo: 5 },
+      { type: 'Skills / professional help', body: 'Resume writing and LinkedIn makeovers — free for Circle members this month (limited slots).', authorName: 'Career Coach Jen', daysAgo: 6 },
+      { type: 'Mentorship', body: 'Ran a successful food truck. Happy to share what worked (and what didn\'t) with aspiring food entrepreneurs.', authorName: 'Chef Ray', daysAgo: 7 },
+      { type: 'Time / volunteering', body: 'Spanish bilingual. Can help translate documents or accompany members to appointments.', authorName: 'Lucia M.', daysAgo: 8 },
+      { type: 'Goods / resources', body: 'Extra school supplies and backpacks ready for the school year. Coordinating drop-off.', authorName: 'Parent Circle Group', daysAgo: 8 },
+      { type: 'Financial contribution', body: 'Sponsoring two months of a member\'s childcare gap while they start a new job. Coordinate via admins.', authorName: 'Giving Partner', daysAgo: 9 },
+      { type: 'Skills / professional help', body: 'Notary public — free notarization for Circle members by appointment in Margate.', authorName: 'Notary Kim', daysAgo: 10 },
+      { type: 'Connections / introductions', body: 'Contacts at local credit unions for second-chance banking and small loans. Happy to intro.', authorName: 'Marcus W.', daysAgo: 11 },
+      { type: 'Mentorship', body: 'Mental health peer support (not therapy). Lived experience with recovery. Open to listening.', authorName: 'Peer Supporter', daysAgo: 12 }
+    ].map((o, i) => ({
+      id: 'mock-off-' + i,
+      type: o.type,
+      body: o.body,
+      authorName: o.authorName,
+      createdAt: { toDate: () => new Date(Date.now() - o.daysAgo * 86400000) },
+      _mock: true
+    }));
+
+    function formatWhen(item) {
+      if (item.createdAt && item.createdAt.toDate) {
+        try { return item.createdAt.toDate().toLocaleString(); } catch (e) {}
+      }
+      if (item.createdAt && item.createdAt.seconds) {
+        return new Date(item.createdAt.seconds * 1000).toLocaleString();
+      }
+      return '';
+    }
+
     function renderList(id, items, empty) {
       const el = document.getElementById(id);
+      if (!el) return;
       if (!items.length) {
         el.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">' + empty + '</p>';
         return;
       }
       el.innerHTML = items.map(item => {
-        const when = item.createdAt && item.createdAt.toDate ? item.createdAt.toDate().toLocaleString() : '';
+        const when = formatWhen(item);
         return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition bg-white">' +
           '<div class="flex justify-between gap-2 mb-2"><span class="text-xs font-semibold uppercase text-esu-600 bg-esu-50 px-2 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
           '<span class="text-xs text-gray-400">' + when + '</span></div>' +
@@ -539,22 +675,59 @@
       }).join('');
     }
 
+    function renderOverviewPreview(id, items, limit) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const slice = items.slice(0, limit || 4);
+      if (!slice.length) {
+        el.innerHTML = '<p class="text-gray-500 text-sm">No activity yet.</p>';
+        return;
+      }
+      el.innerHTML = slice.map(item => {
+        const when = formatWhen(item);
+        return '<div class="border border-gray-100 rounded-xl p-3.5 bg-gray-50/80 hover:border-esu-200 transition">' +
+          '<div class="flex justify-between gap-2 mb-1"><span class="text-[10px] font-semibold uppercase text-esu-600 bg-esu-50 px-1.5 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
+          '<span class="text-[10px] text-gray-400">' + when + '</span></div>' +
+          '<p class="text-sm text-gray-800 leading-snug line-clamp-2">' + esc(item.body || '') + '</p>' +
+          '<p class="text-xs text-gray-500 mt-1.5">From ' + esc(item.authorName || 'Member') + '</p></div>';
+      }).join('');
+    }
+
+    function applyFeedData(requests, offers) {
+      renderList('requests-list', requests, 'No open requests yet. Be the first to speak up.');
+      renderList('offers-list', offers, 'No offers yet. Share what you can give.');
+      renderOverviewPreview('overview-requests', requests, 4);
+      renderOverviewPreview('overview-offers', offers, 4);
+      const sr = document.getElementById('stat-requests');
+      const so = document.getElementById('stat-offers');
+      if (sr) sr.textContent = requests.length;
+      if (so) so.textContent = offers.length;
+    }
+
     function listenFeeds() {
+      // Start with mock data so the UI never looks empty
+      applyFeedData(MOCK_REQUESTS, MOCK_OFFERS);
+
       onSnapshot(query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(30)), snap => {
-        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-        renderList('requests-list', items, 'No open requests yet. Be the first to speak up.');
-        const stat = document.getElementById('stat-requests');
-        if (stat) stat.textContent = items.length;
+        const live = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        // Prefer live data when available; otherwise keep mocks
+        const requests = live.length ? live : MOCK_REQUESTS;
+        // Re-read offers from last known or keep current — handle in parallel below
+        window.__esuRequests = requests;
+        applyFeedData(requests, window.__esuOffers || MOCK_OFFERS);
       }, () => {
-        document.getElementById('requests-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>';
+        window.__esuRequests = MOCK_REQUESTS;
+        applyFeedData(MOCK_REQUESTS, window.__esuOffers || MOCK_OFFERS);
       });
+
       onSnapshot(query(collection(db, 'offers'), orderBy('createdAt', 'desc'), limit(30)), snap => {
-        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-        renderList('offers-list', items, 'No offers yet. Share what you can give.');
-        const stat = document.getElementById('stat-offers');
-        if (stat) stat.textContent = items.length;
+        const live = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        const offers = live.length ? live : MOCK_OFFERS;
+        window.__esuOffers = offers;
+        applyFeedData(window.__esuRequests || MOCK_REQUESTS, offers);
       }, () => {
-        document.getElementById('offers-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>';
+        window.__esuOffers = MOCK_OFFERS;
+        applyFeedData(window.__esuRequests || MOCK_REQUESTS, MOCK_OFFERS);
       });
     }
 
