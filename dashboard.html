@@ -298,11 +298,22 @@
         <!-- Profile card -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 mb-8">
           <div class="flex items-start gap-4 mb-6">
-            <div id="avatar" class="w-16 h-16 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold flex-shrink-0">M</div>
-            <div>
+            <div class="relative flex-shrink-0">
+              <div id="avatar" class="w-20 h-20 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold overflow-hidden ring-2 ring-esu-100">
+                <span id="avatar-letter">M</span>
+                <img id="avatar-img" src="" alt="" class="hidden w-full h-full object-cover" />
+              </div>
+              <label for="photo-input" class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-esu-600 text-white flex items-center justify-center cursor-pointer shadow hover:bg-esu-700 transition" title="Change photo">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </label>
+              <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp" class="hidden" />
+            </div>
+            <div class="min-w-0">
               <h3 id="profile-name" class="text-xl font-bold">Member</h3>
               <p class="text-gray-500 text-sm"><span id="profile-email">—</span></p>
               <p class="text-gray-500 text-sm mt-0.5"><span id="profile-county">—</span></p>
+              <p id="photo-msg" class="hidden text-xs text-esu-700 mt-2"></p>
+              <p class="text-xs text-gray-400 mt-1">JPG, PNG or WebP · max 3 MB. Visible to Circle members on your posts.</p>
             </div>
           </div>
 
@@ -494,8 +505,9 @@
 
   <script type="module">
     import {
-      auth, db, signOut, onAuthStateChanged, doc, getDoc, updateDoc, setDoc,
-      collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+      auth, db, storage, signOut, onAuthStateChanged, doc, getDoc, updateDoc, setDoc,
+      collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp,
+      updateProfile, ref, uploadBytes, getDownloadURL
     } from './js/firebase.js';
 
     let currentUser = null;
@@ -541,15 +553,39 @@
       document.getElementById('auth-required').classList.remove('hidden');
     }
 
+    function setAvatarDisplay(photoURL, firstName) {
+      const letter = document.getElementById('avatar-letter');
+      const img = document.getElementById('avatar-img');
+      if (!letter || !img) return;
+      if (photoURL) {
+        img.src = photoURL;
+        img.classList.remove('hidden');
+        letter.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        img.removeAttribute('src');
+        letter.classList.remove('hidden');
+        letter.textContent = (firstName || 'M').charAt(0).toUpperCase();
+      }
+    }
+
+    function avatarHtml(photoURL, name, sizeClass) {
+      const initial = (name || 'M').charAt(0).toUpperCase();
+      const size = sizeClass || 'w-9 h-9';
+      if (photoURL) {
+        return '<img src="' + esc(photoURL) + '" alt="" class="' + size + ' rounded-full object-cover flex-shrink-0 ring-1 ring-gray-100" />';
+      }
+      return '<div class="' + size + ' rounded-full bg-esu-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">' + esc(initial) + '</div>';
+    }
+
     function fillProfile(m) {
       const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Member';
       document.getElementById('welcome-name').textContent = m.firstName || 'Member';
       document.getElementById('top-name').textContent = name;
       document.getElementById('profile-name').textContent = name;
-      document.getElementById('avatar').textContent = (m.firstName || 'M').charAt(0).toUpperCase();
+      setAvatarDisplay(m.photoURL || (currentUser && currentUser.photoURL) || '', m.firstName);
       document.getElementById('profile-email').textContent = m.email || '—';
       document.getElementById('profile-county').textContent = m.county || '—';
-      // Edit form
       document.getElementById('edit-firstName').value = m.firstName || '';
       document.getElementById('edit-lastName').value = m.lastName || '';
       document.getElementById('edit-phone').value = m.phone || '';
@@ -625,6 +661,7 @@
       body: r.body,
       authorName: r.authorName,
       createdAt: { toDate: () => new Date(Date.now() - r.daysAgo * 86400000) },
+      authorPhotoURL: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(r.authorName) + '&background=16a34a&color=fff&size=128&bold=true',
       _mock: true
     }));
 
@@ -655,6 +692,7 @@
       body: o.body,
       authorName: o.authorName,
       createdAt: { toDate: () => new Date(Date.now() - o.daysAgo * 86400000) },
+      authorPhotoURL: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(o.authorName) + '&background=15803d&color=fff&size=128&bold=true',
       _mock: true
     }));
 
@@ -677,11 +715,13 @@
       }
       el.innerHTML = items.map(item => {
         const when = formatWhen(item);
+        const name = item.authorName || 'Member';
         return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition bg-white">' +
           '<div class="flex justify-between gap-2 mb-2"><span class="text-xs font-semibold uppercase text-esu-600 bg-esu-50 px-2 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
           '<span class="text-xs text-gray-400">' + when + '</span></div>' +
           '<p class="text-sm text-gray-800 leading-relaxed">' + esc(item.body || '') + '</p>' +
-          '<p class="text-xs text-gray-500 mt-2">From ' + esc(item.authorName || 'Member') + '</p></div>';
+          '<div class="flex items-center gap-2 mt-3">' + avatarHtml(item.authorPhotoURL, name, 'w-7 h-7') +
+          '<p class="text-xs text-gray-500">From ' + esc(name) + '</p></div></div>';
       }).join('');
     }
 
@@ -695,11 +735,13 @@
       }
       el.innerHTML = slice.map(item => {
         const when = formatWhen(item);
+        const name = item.authorName || 'Member';
         return '<div class="border border-gray-100 rounded-xl p-3.5 bg-gray-50/80 hover:border-esu-200 transition">' +
           '<div class="flex justify-between gap-2 mb-1"><span class="text-[10px] font-semibold uppercase text-esu-600 bg-esu-50 px-1.5 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
           '<span class="text-[10px] text-gray-400">' + when + '</span></div>' +
           '<p class="text-sm text-gray-800 leading-snug line-clamp-2">' + esc(item.body || '') + '</p>' +
-          '<p class="text-xs text-gray-500 mt-1.5">From ' + esc(item.authorName || 'Member') + '</p></div>';
+          '<div class="flex items-center gap-2 mt-2">' + avatarHtml(item.authorPhotoURL, name, 'w-6 h-6') +
+          '<p class="text-xs text-gray-500">From ' + esc(name) + '</p></div></div>';
       }).join('');
     }
 
@@ -764,6 +806,7 @@
       id: 'mock-eng-' + i,
       ...e,
       createdAt: { toDate: () => new Date(Date.now() - e.daysAgo * 86400000) },
+      authorPhotoURL: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(e.authorName) + '&background=166534&color=fff&size=128&bold=true',
       _mock: true
     }));
 
@@ -848,7 +891,7 @@
             <span class="text-xs text-gray-400 ml-auto">${when}</span>
           </div>
           <p class="text-sm text-gray-800 leading-relaxed">${esc(item.note || '')}</p>
-          <p class="text-xs text-gray-500 mt-2">From ${esc(item.authorName || 'Member')}</p>
+          <div class="flex items-center gap-2 mt-3">${avatarHtml(item.authorPhotoURL, item.authorName || 'Member', 'w-7 h-7')}<p class="text-xs text-gray-500">From ${esc(item.authorName || 'Member')}</p></div>
         </div>`;
       }).join('');
     }
@@ -894,6 +937,7 @@
           note,
           authorId: currentUser.uid,
           authorName: name,
+          authorPhotoURL: (memberProfile && memberProfile.photoURL) || (currentUser.photoURL) || '',
           createdAt: serverTimestamp()
         });
         msg.textContent = 'Thank you — your engagement was shared with the Circle.';
@@ -964,7 +1008,35 @@
       }
     });
 
-    document.getElementById('logout-btn').addEventListener('click', async () => {
+
+    // Profile photo upload
+    document.getElementById('photo-input')?.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file || !currentUser) return;
+      if (file.size > 3 * 1024 * 1024) {
+        alert('Image must be under 3 MB.');
+        return;
+      }
+      const msg = document.getElementById('photo-msg');
+      msg.textContent = 'Uploading…';
+      msg.classList.remove('hidden');
+      try {
+        const path = 'members/' + currentUser.uid + '/avatar_' + Date.now() + '.jpg';
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        await updateDoc(doc(db, 'members', currentUser.uid), { photoURL: url });
+        try { await updateProfile(currentUser, { photoURL: url }); } catch (_) {}
+        memberProfile = { ...memberProfile, photoURL: url };
+        setAvatarDisplay(url, memberProfile.firstName);
+        msg.textContent = 'Photo updated — Circle members will see it on your posts.';
+      } catch (err) {
+        console.error(err);
+        msg.textContent = 'Upload failed. Enable Firebase Storage and check Storage rules.';
+      }
+    });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
       localStorage.removeItem('esu_member');
       await signOut(auth);
       window.location.href = 'index.html';
@@ -1062,6 +1134,7 @@
           body,
           authorId: currentUser.uid,
           authorName: name,
+          authorPhotoURL: (memberProfile && memberProfile.photoURL) || (currentUser.photoURL) || '',
           createdAt: serverTimestamp()
         });
         document.getElementById(msgId).textContent = 'Posted to the Circle.';
