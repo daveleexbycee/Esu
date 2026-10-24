@@ -424,45 +424,55 @@
     <!-- ========== TAB: CAUSES ========== -->
     <div id="tab-causes" class="tab-panel">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="flex items-center justify-between mb-8">
+        <div class="mb-8">
           <h2 class="text-2xl md:text-3xl font-bold">Engage with our causes</h2>
+          <p class="text-gray-600 mt-2 max-w-2xl">Pick a cause you care about. Offer time, skills, resources, or financial support — or raise your hand when you need help in that area.</p>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
-            <div class="p-5">
-              <h3 class="font-bold mb-1">Community support</h3>
-              <p class="text-sm text-gray-600 mb-3">Help members in business, career, and daily life.</p>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:65%"></div></div>
-              <p class="text-xs text-gray-500">65% of Circle energy</p>
+
+        <div class="grid sm:grid-cols-2 gap-6 mb-10" id="causes-grid">
+          <!-- Cause cards injected by JS for engagement counts -->
+        </div>
+
+        <!-- Engagement form panel -->
+        <div id="cause-engage-panel" class="hidden bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8 mb-10">
+          <div class="flex justify-between items-start gap-4 mb-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-esu-600 mb-1">Get involved</p>
+              <h3 class="text-xl font-bold" id="engage-cause-title">Cause</h3>
             </div>
+            <button type="button" id="close-engage-panel" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
           </div>
-          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
-            <div class="p-5">
-              <h3 class="font-bold mb-1">Animals & livelihoods</h3>
-              <p class="text-sm text-gray-600 mb-3">Support for animals and the people who care for them.</p>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:40%"></div></div>
-              <p class="text-xs text-gray-500">Growing focus</p>
+          <form id="cause-engage-form" class="space-y-4 max-w-xl">
+            <input type="hidden" id="engage-cause-id" />
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">How do you want to engage?</label>
+              <select id="engage-action" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" required>
+                <option value="offer_help">I want to offer help</option>
+                <option value="volunteer">I can volunteer time</option>
+                <option value="skills">I can share skills / expertise</option>
+                <option value="resources">I can give goods or resources</option>
+                <option value="financial">I can contribute financially</option>
+                <option value="need_help">I need help in this area</option>
+                <option value="learn">I want to learn more / stay updated</option>
+              </select>
             </div>
-          </div>
-          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
-            <div class="p-5">
-              <h3 class="font-bold mb-1">Disaster relief</h3>
-              <p class="text-sm text-gray-600 mb-3">Rapid response when members face crisis.</p>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:55%"></div></div>
-              <p class="text-xs text-gray-500">Always ready</p>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tell the Circle a bit more</label>
+              <textarea id="engage-note" rows="3" required placeholder="e.g. I can mentor 2 hours a month, or I need help with…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
             </div>
-          </div>
-          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
-            <div class="p-5">
-              <h3 class="font-bold mb-1">Turning passion into service</h3>
-              <p class="text-sm text-gray-600 mb-3">Help members fund and launch public-good projects.</p>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:50%"></div></div>
-              <p class="text-xs text-gray-500">Future of philanthropy</p>
+            <p id="engage-msg" class="hidden text-sm text-esu-700"></p>
+            <div class="flex flex-wrap gap-3">
+              <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Submit engagement</button>
+              <button type="button" id="cancel-engage" class="px-6 py-2.5 rounded-full border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">Cancel</button>
             </div>
+          </form>
+        </div>
+
+        <!-- Recent engagements feed -->
+        <div>
+          <h3 class="font-bold text-lg mb-4">Recent cause engagements</h3>
+          <div id="cause-engagements-list" class="space-y-3 max-w-3xl">
+            <p class="text-gray-500 text-sm">Loading…</p>
           </div>
         </div>
       </div>
@@ -704,6 +714,209 @@
       if (so) so.textContent = offers.length;
     }
 
+
+    // ---------- Causes & engagement ----------
+    const CAUSES = [
+      {
+        id: 'community',
+        title: 'Community support',
+        desc: 'Help members in business, career, and daily life.',
+        img: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80',
+        progress: 72,
+        mockSupporters: 186
+      },
+      {
+        id: 'animals',
+        title: 'Animals & livelihoods',
+        desc: 'Support for animals and the people who care for them.',
+        img: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80',
+        progress: 41,
+        mockSupporters: 64
+      },
+      {
+        id: 'disaster',
+        title: 'Disaster relief',
+        desc: 'Rapid response when members face crisis.',
+        img: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80',
+        progress: 58,
+        mockSupporters: 97
+      },
+      {
+        id: 'service',
+        title: 'Passion into service',
+        desc: 'Help members fund and launch public-good projects.',
+        img: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=600&q=80',
+        progress: 53,
+        mockSupporters: 112
+      }
+    ];
+
+    const MOCK_ENGAGEMENTS = [
+      { causeId: 'community', action: 'offer_help', note: 'Can review resumes for members job-hunting this month.', authorName: 'Patricia M.', daysAgo: 0 },
+      { causeId: 'disaster', action: 'volunteer', note: 'Available for storm cleanup weekends in Broward.', authorName: 'Tony R.', daysAgo: 1 },
+      { causeId: 'animals', action: 'resources', note: 'Donating pet food and supplies to local foster network.', authorName: 'Rachel B.', daysAgo: 1 },
+      { causeId: 'service', action: 'skills', note: 'Web help for members launching community projects.', authorName: 'Alex C.', daysAgo: 2 },
+      { causeId: 'community', action: 'financial', note: 'Can contribute to emergency utility support pool.', authorName: 'Anonymous Member', daysAgo: 2 },
+      { causeId: 'disaster', action: 'need_help', note: 'Need temporary housing contacts after water damage.', authorName: 'Angela R.', daysAgo: 3 },
+      { causeId: 'service', action: 'learn', note: 'Want to turn my tutoring passion into a funded program.', authorName: 'Omar C.', daysAgo: 4 },
+      { causeId: 'community', action: 'volunteer', note: 'Saturday mornings free for errands or moving help.', authorName: 'Frank L.', daysAgo: 5 }
+    ].map((e, i) => ({
+      id: 'mock-eng-' + i,
+      ...e,
+      createdAt: { toDate: () => new Date(Date.now() - e.daysAgo * 86400000) },
+      _mock: true
+    }));
+
+    const ACTION_LABELS = {
+      offer_help: 'Offering help',
+      volunteer: 'Volunteering time',
+      skills: 'Sharing skills',
+      resources: 'Giving resources',
+      financial: 'Financial support',
+      need_help: 'Needs help',
+      learn: 'Learning more'
+    };
+
+    let engagementCounts = {};
+    CAUSES.forEach(c => { engagementCounts[c.id] = c.mockSupporters; });
+
+    function renderCauseCards() {
+      const grid = document.getElementById('causes-grid');
+      if (!grid) return;
+      grid.innerHTML = CAUSES.map(c => {
+        const count = engagementCounts[c.id] || c.mockSupporters;
+        return `
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col">
+            <img src="${c.img}" alt="" class="h-40 w-full object-cover" />
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="font-bold text-lg mb-1">${esc(c.title)}</h3>
+              <p class="text-sm text-gray-600 mb-3 flex-1">${esc(c.desc)}</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
+                <div class="h-full bg-esu-500 rounded-full" style="width:${c.progress}%"></div>
+              </div>
+              <p class="text-xs text-gray-500 mb-4">${count} members engaged · ${c.progress}% Circle focus</p>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" data-cause="${c.id}" class="cause-engage-btn flex-1 px-3 py-2 rounded-full bg-esu-600 text-white text-sm font-semibold hover:bg-esu-700 transition">
+                  Get involved
+                </button>
+                <button type="button" data-cause="${c.id}" data-need="1" class="cause-engage-btn px-3 py-2 rounded-full border border-esu-600 text-esu-700 text-sm font-semibold hover:bg-esu-50 transition">
+                  I need help
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      grid.querySelectorAll('.cause-engage-btn').forEach(btn => {
+        btn.addEventListener('click', () => openEngagePanel(btn.dataset.cause, btn.dataset.need === '1'));
+      });
+    }
+
+    function openEngagePanel(causeId, needHelp) {
+      const cause = CAUSES.find(c => c.id === causeId);
+      if (!cause) return;
+      document.getElementById('engage-cause-id').value = causeId;
+      document.getElementById('engage-cause-title').textContent = cause.title;
+      const action = document.getElementById('engage-action');
+      action.value = needHelp ? 'need_help' : 'offer_help';
+      document.getElementById('engage-note').value = '';
+      document.getElementById('engage-msg').classList.add('hidden');
+      const panel = document.getElementById('cause-engage-panel');
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeEngagePanel() {
+      document.getElementById('cause-engage-panel').classList.add('hidden');
+    }
+
+    function renderEngagements(items) {
+      const el = document.getElementById('cause-engagements-list');
+      if (!el) return;
+      if (!items.length) {
+        el.innerHTML = '<p class="text-gray-500 text-sm">No engagements yet. Be the first to get involved.</p>';
+        return;
+      }
+      el.innerHTML = items.slice(0, 15).map(item => {
+        const cause = CAUSES.find(c => c.id === item.causeId);
+        const when = formatWhen(item);
+        const actionLabel = ACTION_LABELS[item.action] || item.action;
+        return `<div class="border border-gray-100 rounded-xl p-4 bg-white hover:border-esu-200 transition">
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="text-xs font-semibold uppercase text-esu-700 bg-esu-50 px-2 py-0.5 rounded">${esc(cause ? cause.title : item.causeId)}</span>
+            <span class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded">${esc(actionLabel)}</span>
+            <span class="text-xs text-gray-400 ml-auto">${when}</span>
+          </div>
+          <p class="text-sm text-gray-800 leading-relaxed">${esc(item.note || '')}</p>
+          <p class="text-xs text-gray-500 mt-2">From ${esc(item.authorName || 'Member')}</p>
+        </div>`;
+      }).join('');
+    }
+
+    function listenCauseEngagements() {
+      renderCauseCards();
+      renderEngagements(MOCK_ENGAGEMENTS);
+
+      onSnapshot(query(collection(db, 'causeEngagements'), orderBy('createdAt', 'desc'), limit(30)), snap => {
+        const live = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        const items = live.length ? live : MOCK_ENGAGEMENTS;
+        renderEngagements(items);
+        // Update counts from live + mock base
+        const counts = {};
+        CAUSES.forEach(c => { counts[c.id] = c.mockSupporters; });
+        live.forEach(e => {
+          if (e.causeId) counts[e.causeId] = (counts[e.causeId] || 0) + 1;
+        });
+        engagementCounts = counts;
+        renderCauseCards();
+      }, () => {
+        renderEngagements(MOCK_ENGAGEMENTS);
+        renderCauseCards();
+      });
+    }
+
+    document.getElementById('close-engage-panel')?.addEventListener('click', closeEngagePanel);
+    document.getElementById('cancel-engage')?.addEventListener('click', closeEngagePanel);
+
+    document.getElementById('cause-engage-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const causeId = document.getElementById('engage-cause-id').value;
+      const action = document.getElementById('engage-action').value;
+      const note = document.getElementById('engage-note').value.trim();
+      if (!note) return;
+      const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
+      const msg = document.getElementById('engage-msg');
+      try {
+        await addDoc(collection(db, 'causeEngagements'), {
+          causeId,
+          action,
+          note,
+          authorId: currentUser.uid,
+          authorName: name,
+          createdAt: serverTimestamp()
+        });
+        msg.textContent = 'Thank you — your engagement was shared with the Circle.';
+        msg.classList.remove('hidden');
+        document.getElementById('engage-note').value = '';
+        setTimeout(closeEngagePanel, 1500);
+      } catch (err) {
+        // Optimistic local success if rules not ready
+        msg.textContent = 'Saved locally. (If this persists, check Firestore rules for causeEngagements.)';
+        msg.classList.remove('hidden');
+        const local = {
+          id: 'local-' + Date.now(),
+          causeId, action, note,
+          authorName: name,
+          createdAt: { toDate: () => new Date() }
+        };
+        renderEngagements([local, ...MOCK_ENGAGEMENTS]);
+        engagementCounts[causeId] = (engagementCounts[causeId] || 0) + 1;
+        renderCauseCards();
+      }
+    });
+
+
     function listenFeeds() {
       // Start with mock data so the UI never looks empty
       applyFeedData(MOCK_REQUESTS, MOCK_OFFERS);
@@ -742,10 +955,12 @@
         fillProfile(memberProfile);
         showDash();
         listenFeeds();
+        listenCauseEngagements();
       } catch (e) {
         fillProfile({ firstName: user.displayName || 'Member', email: user.email });
         showDash();
         listenFeeds();
+        listenCauseEngagements();
       }
     });
 
