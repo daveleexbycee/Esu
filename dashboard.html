@@ -13,8 +13,7 @@
             esu: {
               50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 400: '#4ade80',
               500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d'
-            },
-            deep: { 800: '#1a1230', 900: '#120c24', 950: '#0c0818' }
+            }
           },
           fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
         }
@@ -24,9 +23,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .hero-bg {
-      background: linear-gradient(135deg, #14532d 0%, #166534 40%, #0f172a 100%);
-    }
+    .hero-bg { background: linear-gradient(135deg, #14532d 0%, #166534 40%, #0f172a 100%); }
+    .tab-btn.active { background: #16a34a; color: white; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
@@ -36,6 +36,7 @@
   <div id="auth-required" class="hidden min-h-screen flex items-center justify-center px-4">
     <div class="text-center">
       <h1 class="text-2xl font-bold mb-3">Sign in to continue</h1>
+      <p class="text-gray-500 mb-6">Your Circle membership is waiting.</p>
       <div class="flex gap-3 justify-center">
         <a href="login.html" class="px-6 py-3 rounded-full bg-esu-600 text-white font-semibold">Sign in</a>
         <a href="join.html" class="px-6 py-3 rounded-full border border-esu-600 text-esu-700 font-semibold">Join</a>
@@ -47,7 +48,7 @@
     <!-- Top bar -->
     <div class="bg-esu-900 text-white/80 text-xs py-2">
       <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <span>Eccentric Souls in Unity · Margate, FL</span>
+        <span>Eccentric Souls in Unity · 6219 Coral Lake Dr, Margate, FL 33063</span>
         <span id="top-name" class="hidden sm:inline"></span>
       </div>
     </div>
@@ -55,337 +56,383 @@
     <!-- Nav -->
     <header class="bg-esu-800 text-white sticky top-0 z-50 shadow-lg">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 md:h-18">
+        <div class="flex items-center justify-between h-16">
           <a href="dashboard.html" class="flex items-center gap-2">
             <span class="font-bold text-xl tracking-tight">ESU<span class="text-esu-400">.</span></span>
           </a>
-          <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-white/85">
-            <a href="#home" class="text-white">Home</a>
-            <a href="#support" class="hover:text-white transition">Support</a>
-            <a href="#requests" class="hover:text-white transition">Requests</a>
-            <a href="#offers" class="hover:text-white transition">Offers</a>
-            <a href="#causes" class="hover:text-white transition">Causes</a>
+          <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-white/85">
+            <button data-tab="overview" class="tab-nav hover:text-white transition">Overview</button>
+            <button data-tab="feed" class="tab-nav hover:text-white transition">Circle Feed</button>
+            <button data-tab="profile" class="tab-nav hover:text-white transition">Profile & Payouts</button>
+            <button data-tab="causes" class="tab-nav hover:text-white transition">Causes</button>
           </nav>
           <div class="flex items-center gap-3">
-            <button onclick="showPanel('ask')" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-esu-800 text-sm font-semibold hover:bg-esu-50 transition">
-              Ask for help
-            </button>
+            <button onclick="showPanel('ask')" class="hidden sm:inline-flex text-sm px-3 py-1.5 rounded-full bg-esu-500 hover:bg-esu-400 font-medium transition">Ask for support</button>
             <button id="logout-btn" class="text-sm px-3 py-1.5 rounded-full border border-white/25 hover:bg-white/10 transition">Sign out</button>
           </div>
+        </div>
+        <!-- Mobile tabs -->
+        <div class="md:hidden flex gap-2 pb-3 overflow-x-auto text-xs font-medium">
+          <button data-tab="overview" class="tab-nav px-3 py-1.5 rounded-full bg-white/10 whitespace-nowrap">Overview</button>
+          <button data-tab="feed" class="tab-nav px-3 py-1.5 rounded-full bg-white/10 whitespace-nowrap">Feed</button>
+          <button data-tab="profile" class="tab-nav px-3 py-1.5 rounded-full bg-white/10 whitespace-nowrap">Profile & Payouts</button>
+          <button data-tab="causes" class="tab-nav px-3 py-1.5 rounded-full bg-white/10 whitespace-nowrap">Causes</button>
         </div>
       </div>
     </header>
 
-    <!-- Hero -->
-    <section id="home" class="hero-bg text-white relative overflow-hidden">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <p class="text-esu-300 text-sm font-semibold uppercase tracking-wider mb-3">Member Area</p>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
-              Hello, <span id="welcome-name" class="text-esu-300">Member</span>.<br />
-              The Circle stands with you.
+    <!-- ========== TAB: OVERVIEW ========== -->
+    <div id="tab-overview" class="tab-panel active">
+      <section class="hero-bg text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+          <div class="max-w-2xl">
+            <p class="text-esu-300 text-sm font-semibold uppercase tracking-wider mb-2">Member Area</p>
+            <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">
+              Hello, <span id="welcome-name" class="text-esu-300">Member</span>.
             </h1>
-            <p class="text-lg text-white/80 max-w-md mb-8 leading-relaxed">
-              When you have, you give. When you need, you receive. No shame. No begging. Just Community.
+            <p class="text-white/80 text-lg mb-8 leading-relaxed">
+              In this Circle, when you have, you give. When you need, you receive. No shame. No begging. Just Community.
             </p>
             <div class="flex flex-wrap gap-3">
-              <button onclick="showPanel('ask')" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-esu-400 text-esu-950 font-bold hover:bg-esu-300 transition">
-                Ask for support
-              </button>
-              <button onclick="showPanel('offer')" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-white/40 text-white font-semibold hover:bg-white/10 transition">
-                Offer help
-              </button>
-            </div>
-          </div>
-          <div class="relative hidden lg:block h-80">
-            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=400&q=80" alt="" class="absolute top-0 right-12 w-36 h-36 rounded-full object-cover border-4 border-white/20 shadow-xl" />
-            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=300&q=80" alt="" class="absolute top-24 right-48 w-28 h-28 rounded-full object-cover border-4 border-white/20 shadow-xl" />
-            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=300&q=80" alt="" class="absolute bottom-8 right-8 w-32 h-32 rounded-full object-cover border-4 border-white/20 shadow-xl" />
-            <div class="absolute bottom-0 left-8 w-40 h-40 rounded-full bg-esu-500/30 border-4 border-esu-400/40 flex items-center justify-center backdrop-blur-sm">
-              <span class="text-center text-sm font-bold leading-tight">GIVE<br/>&amp;<br/>RECEIVE</span>
+              <button onclick="showPanel('ask')" class="px-6 py-3 rounded-full bg-esu-500 hover:bg-esu-400 text-white font-semibold transition">Ask for support</button>
+              <button onclick="showPanel('offer')" class="px-6 py-3 rounded-full border border-white/40 hover:bg-white/10 font-semibold transition">Offer help</button>
+              <button data-tab="profile" class="tab-nav px-6 py-3 rounded-full border border-white/40 hover:bg-white/10 font-semibold transition">Add payout method</button>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Quote + stats -->
-    <section class="bg-white py-14 md:py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-10 items-center mb-14">
-          <div class="relative">
-            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" alt="Community" class="rounded-2xl shadow-lg w-full object-cover h-64 md:h-72" />
-            <div class="absolute -bottom-4 -right-2 md:right-4 bg-esu-600 text-white rounded-full w-20 h-20 flex flex-col items-center justify-center text-center shadow-lg">
-              <span class="text-xl font-bold leading-none">ESU</span>
-              <span class="text-[10px] uppercase tracking-wide">Circle</span>
+      <!-- Stats -->
+      <section class="bg-white py-12 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <div class="text-3xl font-bold text-esu-700">160+</div>
+              <div class="text-sm text-gray-500 mt-1">Organizations</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-esu-700">420</div>
+              <div class="text-sm text-gray-500 mt-1">Individuals</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-esu-700" id="stat-requests">—</div>
+              <div class="text-sm text-gray-500 mt-1">Open requests</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-esu-700" id="stat-offers">—</div>
+              <div class="text-sm text-gray-500 mt-1">Active offers</div>
             </div>
           </div>
-          <div>
-            <p class="text-xl md:text-2xl text-gray-700 leading-relaxed font-medium mb-6">
-              Embracing mutual support, we propel towards meaningful transformation — shaping a brighter future with every courageous decision we make.
-            </p>
-            <p class="text-gray-600 leading-relaxed mb-6">
-              You will meet good people who can help you grow in business, career, and life. If you ever need help, you don’t suffer alone. You speak up and the Circle stands with you.
-            </p>
-            <a href="#support" class="inline-flex px-5 py-2.5 rounded-full bg-esu-500 text-white font-semibold text-sm hover:bg-esu-600 transition">Explore how to help</a>
-          </div>
         </div>
-        <div class="grid grid-cols-3 gap-6 text-center border-t border-gray-100 pt-10">
-          <div>
-            <div class="text-3xl md:text-4xl font-bold text-esu-700">160+</div>
-            <div class="text-sm text-gray-500 mt-1">Organizations</div>
-          </div>
-          <div>
-            <div class="text-3xl md:text-4xl font-bold text-esu-700">420</div>
-            <div class="text-sm text-gray-500 mt-1">Individuals</div>
-          </div>
-          <div>
-            <div class="text-3xl md:text-4xl font-bold text-esu-700" id="live-members">—</div>
-            <div class="text-sm text-gray-500 mt-1">In the Circle</div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- How can you support -->
-    <section id="support" class="bg-gray-50 py-14 md:py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">How can you support<br class="hidden sm:block" /> our Circle?</h2>
-        </div>
-        <div class="grid sm:grid-cols-3 gap-5">
-          <button onclick="showPanel('offer')" class="bg-white rounded-2xl p-6 text-left border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition group">
-            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4 group-hover:bg-esu-500 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <!-- How you can support -->
+      <section class="py-14 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">How can you support our Circle?</h2>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
+              <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-700 flex items-center justify-center text-xl mb-4">💚</div>
+              <h3 class="font-bold text-lg mb-2">Give when you can</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Share skills, time, mentorship, or financial support with members who speak up.</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-lg mb-1">Give when you have</h3>
-            <p class="text-sm text-gray-500">Share resources, skills, time, or connections with members who need them.</p>
-          </button>
-          <button onclick="showPanel('ask')" class="bg-white rounded-2xl p-6 text-left border border-gray-100 shadow-sm hover:shadow-md hover:border-esu-200 transition group">
-            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4 group-hover:bg-esu-500 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
+              <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-700 flex items-center justify-center text-xl mb-4">🤝</div>
+              <h3 class="font-bold text-lg mb-2">Receive when you need</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">Post a request. The Circle stands with you — no shame, no begging.</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-lg mb-1">Receive when you need</h3>
-            <p class="text-sm text-gray-500">Speak up. The Circle is here — no shame, no begging.</p>
-          </button>
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-600 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition">
+              <div class="w-12 h-12 rounded-xl bg-esu-100 text-esu-700 flex items-center justify-center text-xl mb-4">🏦</div>
+              <h3 class="font-bold text-lg mb-2">Add payout details</h3>
+              <p class="text-gray-600 text-sm leading-relaxed mb-3">So the Circle can send support funds directly when help is approved.</p>
+              <button data-tab="profile" class="tab-nav text-esu-600 font-semibold text-sm hover:underline">Go to Profile & Payouts →</button>
             </div>
-            <h3 class="font-bold text-gray-900 text-lg mb-1">Grow together</h3>
-            <p class="text-sm text-gray-500">Business, career, and life support from good people in the network.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Ask / Offer panels -->
-    <div id="panel-ask" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">Ask for Support</h2>
-          <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
-        </div>
-        <form id="ask-form" class="space-y-4 max-w-xl">
-          <select id="ask-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
-            <option>Financial support</option>
-            <option>Career / business advice</option>
-            <option>Mentorship</option>
-            <option>Housing / basic needs</option>
-            <option>Emotional support</option>
-            <option>Other</option>
-          </select>
-          <textarea id="ask-body" rows="4" required placeholder="Share what you need…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
-          <p id="ask-msg" class="hidden text-sm text-esu-700"></p>
-          <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Submit request</button>
-        </form>
-      </div>
-    </div>
-    <div id="panel-offer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">Offer Help</h2>
-          <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
-        </div>
-        <form id="offer-form" class="space-y-4 max-w-xl">
-          <select id="offer-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
-            <option>Time / volunteering</option>
-            <option>Skills / professional help</option>
-            <option>Financial contribution</option>
-            <option>Mentorship</option>
-            <option>Goods / resources</option>
-            <option>Connections / introductions</option>
-            <option>Other</option>
-          </select>
-          <textarea id="offer-body" rows="4" required placeholder="Describe what you can offer…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
-          <p id="offer-msg" class="hidden text-sm text-esu-700"></p>
-          <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Post offer</button>
-        </form>
-      </div>
+      </section>
     </div>
 
-    <!-- Mission dark section -->
-    <section class="bg-esu-900 text-white py-16 md:py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 class="text-3xl md:text-4xl font-bold mb-3">The mission of our Circle</h2>
-            <p class="text-white/70 mb-8">Explore the values and promise that guide every act of mutual support.</p>
-            <div class="space-y-3" id="mission-accordion">
-              <details open class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
-                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
-                  Safer community
-                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="px-5 pb-4 text-sm text-white/70">A trusted space where people can ask for help and offer support without fear or judgment.</p>
-              </details>
-              <details class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
-                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
-                  Community-first giving
-                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="px-5 pb-4 text-sm text-white/70">Decisions and resources flow from and for the people inside the Circle.</p>
-              </details>
-              <details class="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
-                <summary class="px-5 py-4 font-semibold cursor-pointer flex justify-between items-center list-none">
-                  Honest & memorable support
-                  <span class="text-esu-400 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="px-5 pb-4 text-sm text-white/70">We speak plainly about needs. Real help leaves lasting marks.</p>
-              </details>
-            </div>
-          </div>
-          <div class="flex justify-center">
-            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full bg-esu-800 border border-esu-600/40 flex items-center justify-center relative">
-              <div class="text-center">
-                <div class="text-5xl font-bold text-esu-400 mb-1">ESU</div>
-                <div class="text-sm text-white/60">Giving Circle</div>
-              </div>
-              <span class="absolute top-6 right-10 w-3 h-3 rounded-full bg-esu-400"></span>
-              <span class="absolute bottom-16 left-8 w-2.5 h-2.5 rounded-full bg-esu-300"></span>
-              <span class="absolute top-1/2 right-4 w-2 h-2 rounded-full bg-white/50"></span>
-            </div>
+    <!-- ========== TAB: CIRCLE FEED ========== -->
+    <div id="tab-feed" class="tab-panel">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold">Circle Feed</h2>
+          <div class="flex gap-2">
+            <button onclick="showPanel('ask')" class="px-4 py-2 rounded-full bg-esu-600 text-white text-sm font-semibold hover:bg-esu-700">Ask for support</button>
+            <button onclick="showPanel('offer')" class="px-4 py-2 rounded-full border border-esu-600 text-esu-700 text-sm font-semibold hover:bg-esu-50">Offer help</button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Live feeds -->
-    <section class="py-14 md:py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Ask / Offer panels -->
+        <div id="panel-ask" class="hidden mb-8">
+          <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-bold">Ask for Support</h3>
+              <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
+            </div>
+            <form id="ask-form" class="space-y-4 max-w-xl">
+              <select id="ask-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+                <option>Financial support</option>
+                <option>Business / career help</option>
+                <option>Mentorship</option>
+                <option>Resources / goods</option>
+                <option>Emergency / disaster</option>
+                <option>Other</option>
+              </select>
+              <textarea id="ask-body" rows="4" required placeholder="Share what you need… Be specific so the Circle can help." class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
+              <p id="ask-msg" class="hidden text-sm text-esu-700"></p>
+              <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Submit request</button>
+            </form>
+          </div>
+        </div>
+        <div id="panel-offer" class="hidden mb-8">
+          <div class="bg-white rounded-2xl border border-esu-100 shadow-lg p-6 md:p-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-bold">Offer Help</h3>
+              <button onclick="hidePanels()" class="text-gray-400 hover:text-gray-600 text-sm">Close</button>
+            </div>
+            <form id="offer-form" class="space-y-4 max-w-xl">
+              <select id="offer-type" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+                <option>Time / volunteering</option>
+                <option>Skills / professional help</option>
+                <option>Financial contribution</option>
+                <option>Mentorship</option>
+                <option>Goods / resources</option>
+                <option>Connections / introductions</option>
+                <option>Other</option>
+              </select>
+              <textarea id="offer-body" rows="4" required placeholder="Describe what you can offer…" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
+              <p id="offer-msg" class="hidden text-sm text-esu-700"></p>
+              <button type="submit" class="px-6 py-2.5 rounded-full bg-esu-600 text-white font-semibold hover:bg-esu-700">Post offer</button>
+            </form>
+          </div>
+        </div>
+
         <div class="grid lg:grid-cols-2 gap-8">
-          <div id="requests">
-            <h2 class="text-2xl font-bold text-gray-900 mb-5">Open support requests</h2>
-            <div id="requests-list" class="space-y-4">
-              <p class="text-gray-500 text-sm py-6 text-center">Loading…</p>
-            </div>
+          <div>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-esu-500"></span> Open Requests
+            </h3>
+            <div id="requests-list" class="space-y-4"></div>
           </div>
-          <div id="offers">
-            <h2 class="text-2xl font-bold text-gray-900 mb-5">Help being offered</h2>
-            <div id="offers-list" class="space-y-4">
-              <p class="text-gray-500 text-sm py-6 text-center">Loading…</p>
-            </div>
+          <div>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-esu-500"></span> Offers from the Circle
+            </h3>
+            <div id="offers-list" class="space-y-4"></div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Causes -->
-    <section id="causes" class="py-14 md:py-20 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ========== TAB: PROFILE & PAYOUTS ========== -->
+    <div id="tab-profile" class="tab-panel">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-2">Profile & Payout Methods</h2>
+        <p class="text-gray-600 mb-8">Keep your details up to date so the Circle can reach you and send support when needed.</p>
+
+        <!-- Profile card -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 mb-8">
+          <div class="flex items-start gap-4 mb-6">
+            <div id="avatar" class="w-16 h-16 rounded-full bg-esu-500 text-white flex items-center justify-center text-2xl font-bold flex-shrink-0">M</div>
+            <div>
+              <h3 id="profile-name" class="text-xl font-bold">Member</h3>
+              <p class="text-gray-500 text-sm"><span id="profile-email">—</span></p>
+              <p class="text-gray-500 text-sm mt-0.5"><span id="profile-county">—</span></p>
+            </div>
+          </div>
+
+          <h4 class="font-semibold text-sm text-gray-500 uppercase tracking-wide mb-3">Edit profile</h4>
+          <form id="profile-form" class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">First name</label>
+              <input id="edit-firstName" type="text" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Last name</label>
+              <input id="edit-lastName" type="text" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input id="edit-phone" type="tel" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">County</label>
+              <input id="edit-county" type="text" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Home address</label>
+              <input id="edit-address" type="text" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <p id="profile-msg" class="hidden text-sm text-esu-700 mb-2"></p>
+              <button type="submit" class="px-5 py-2.5 rounded-full bg-esu-600 text-white font-semibold text-sm hover:bg-esu-700">Save profile</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Payout methods -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <div>
+              <h3 class="text-xl font-bold">Payout methods</h3>
+              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (bank transfer, mobile money, PayPal, etc.).</p>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900 mb-6">
+            <strong>Privacy note:</strong> Your payout details are visible only to you and authorized Circle administrators. They are used solely to send approved support. Never share full account numbers in public requests.
+          </div>
+
+          <!-- Saved methods list -->
+          <div id="payout-list" class="space-y-3 mb-8">
+            <p class="text-gray-500 text-sm">No payout methods yet. Add one below.</p>
+          </div>
+
+          <!-- Add method form -->
+          <div class="border-t border-gray-100 pt-6">
+            <h4 class="font-semibold mb-4">Add a payout method</h4>
+            <form id="payout-form" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Method type</label>
+                <select id="payout-type" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+                  <option value="bank">Bank transfer</option>
+                  <option value="mobile">Mobile money</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="cashapp">Cash App</option>
+                  <option value="venmo">Venmo</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Account / recipient name</label>
+                  <input id="payout-name" type="text" required placeholder="Name on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank / provider name</label>
+                  <input id="payout-provider" type="text" placeholder="e.g. Chase, GTBank, MTN MoMo" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Account number / ID</label>
+                  <input id="payout-account" type="text" required placeholder="Account number, email, or phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Routing / Sort / SWIFT (optional)</label>
+                  <input id="payout-routing" type="text" placeholder="Routing number or code" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
+                <input id="payout-notes" type="text" placeholder="e.g. Prefer this method for emergency support" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+              </div>
+              <div class="flex items-center gap-3">
+                <input id="payout-primary" type="checkbox" class="rounded text-esu-600 focus:ring-esu-500" />
+                <label for="payout-primary" class="text-sm text-gray-700">Set as preferred (primary) method</label>
+              </div>
+              <p id="payout-msg" class="hidden text-sm text-esu-700"></p>
+              <button type="submit" class="px-5 py-2.5 rounded-full bg-esu-600 text-white font-semibold text-sm hover:bg-esu-700">Save payout method</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TAB: CAUSES ========== -->
+    <div id="tab-causes" class="tab-panel">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="flex items-center justify-between mb-8">
-          <h2 class="text-3xl font-bold text-gray-900">Engage with our causes</h2>
+          <h2 class="text-2xl md:text-3xl font-bold">Engage with our causes</h2>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
             <div class="p-5">
-              <h3 class="font-bold text-gray-900 mb-1">Community empowerment</h3>
-              <p class="text-sm text-gray-500 mb-3">Help people of less circumstance be the best they can be.</p>
-              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:70%"></div></div>
-              <p class="text-xs text-gray-400">Circle priority</p>
+              <h3 class="font-bold mb-1">Community support</h3>
+              <p class="text-sm text-gray-600 mb-3">Help members in business, career, and daily life.</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:65%"></div></div>
+              <p class="text-xs text-gray-500">65% of Circle energy</p>
             </div>
           </div>
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
             <div class="p-5">
-              <h3 class="font-bold text-gray-900 mb-1">Animals & livelihoods</h3>
-              <p class="text-sm text-gray-500 mb-3">Care for those who have no voice of their own.</p>
-              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:45%"></div></div>
-              <p class="text-xs text-gray-400">Growing focus</p>
+              <h3 class="font-bold mb-1">Animals & livelihoods</h3>
+              <p class="text-sm text-gray-600 mb-3">Support for animals and the people who care for them.</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:40%"></div></div>
+              <p class="text-xs text-gray-500">Growing focus</p>
             </div>
           </div>
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
             <div class="p-5">
-              <h3 class="font-bold text-gray-900 mb-1">Disaster relief</h3>
-              <p class="text-sm text-gray-500 mb-3">Aid in recovery when communities are hit hardest.</p>
-              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:55%"></div></div>
-              <p class="text-xs text-gray-400">Active need</p>
+              <h3 class="font-bold mb-1">Disaster relief</h3>
+              <p class="text-sm text-gray-600 mb-3">Rapid response when members face crisis.</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:55%"></div></div>
+              <p class="text-xs text-gray-500">Always ready</p>
             </div>
           </div>
           <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-36 object-cover" />
+            <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=600&q=80" alt="" class="h-36 w-full object-cover" />
             <div class="p-5">
-              <h3 class="font-bold text-gray-900 mb-1">Passion into service</h3>
-              <p class="text-sm text-gray-500 mb-3">Turn caring into funded public service.</p>
-              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:30%"></div></div>
-              <p class="text-xs text-gray-400">Building</p>
+              <h3 class="font-bold mb-1">Turning passion into service</h3>
+              <p class="text-sm text-gray-600 mb-3">Help members fund and launch public-good projects.</p>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="h-full bg-esu-500 rounded-full" style="width:50%"></div></div>
+              <p class="text-xs text-gray-500">Future of philanthropy</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- CTA banner -->
-    <section class="bg-esu-700 text-white py-12">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h2 class="text-2xl md:text-3xl font-bold mb-1">Your presence empowers the Circle</h2>
-          <p class="text-esu-100 text-sm">Sponsored & supported by 160+ organizations and 420 individuals.</p>
-        </div>
-        <button onclick="showPanel('offer')" class="px-6 py-3 rounded-full bg-white text-esu-800 font-bold hover:bg-esu-50 transition shrink-0">
-          Offer help today
-        </button>
-      </div>
-    </section>
-
-    <!-- Profile strip -->
-    <section class="bg-white border-t border-gray-100 py-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center gap-4">
-        <div id="avatar" class="w-12 h-12 rounded-full bg-esu-500 text-white flex items-center justify-center text-lg font-bold">M</div>
-        <div>
-          <div id="profile-name" class="font-bold text-gray-900">Member</div>
-          <div class="text-sm text-gray-500"><span id="profile-email">—</span> · <span id="profile-county">—</span></div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="bg-esu-950 text-gray-400 py-8">
-      <div class="max-w-7xl mx-auto px-4 text-sm flex flex-col sm:flex-row justify-between gap-4">
-        <div>Eccentric Souls in Unity · 6219 Coral Lake Dr., Margate, FL 33063</div>
-        <div class="flex gap-4">
-          <a href="index.html" class="hover:text-esu-400">Public site</a>
-          <a href="terms.html" class="hover:text-esu-400">Terms</a>
-          <a href="privacy.html" class="hover:text-esu-400">Privacy</a>
-        </div>
+    <!-- Footer -->
+    <footer class="bg-esu-900 text-white/70 py-10 mt-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+        <p class="font-semibold text-white mb-1">Eccentric Souls in Unity</p>
+        <p>6219 Coral Lake Dr. · Margate, FL 33063</p>
+        <p class="mt-3 space-x-4">
+          <a href="terms.html" class="hover:text-white">Terms & Conditions</a>
+          <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </p>
+        <p class="mt-4 text-xs">© 2025 Eccentric Souls in Unity. A place where good people help each other.</p>
       </div>
     </footer>
   </div>
 
   <script type="module">
     import {
-      auth, db, onAuthStateChanged, signOut,
-      doc, getDoc, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, getCountFromServer
+      auth, db, signOut, onAuthStateChanged, doc, getDoc, updateDoc, setDoc,
+      collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
     } from './js/firebase.js';
 
-    let currentUser = null, memberProfile = null;
+    let currentUser = null;
+    let memberProfile = null;
+
+    // ---------- Tabs ----------
+    function switchTab(name) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('tab-' + name);
+      if (panel) panel.classList.add('active');
+      document.querySelectorAll('.tab-nav').forEach(b => {
+        if (b.dataset.tab === name) b.classList.add('text-white', 'font-semibold');
+        else b.classList.remove('text-white', 'font-semibold');
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.tab-nav').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
 
     window.showPanel = function(w) {
-      hidePanels();
-      document.getElementById('panel-' + w).classList.remove('hidden');
-      document.getElementById('panel-' + w).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      switchTab('feed');
+      setTimeout(() => {
+        document.getElementById('panel-ask').classList.add('hidden');
+        document.getElementById('panel-offer').classList.add('hidden');
+        document.getElementById('panel-' + w).classList.remove('hidden');
+        document.getElementById('panel-' + w).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
     };
     window.hidePanels = function() {
       document.getElementById('panel-ask').classList.add('hidden');
@@ -411,16 +458,63 @@
       document.getElementById('avatar').textContent = (m.firstName || 'M').charAt(0).toUpperCase();
       document.getElementById('profile-email').textContent = m.email || '—';
       document.getElementById('profile-county').textContent = m.county || '—';
+      // Edit form
+      document.getElementById('edit-firstName').value = m.firstName || '';
+      document.getElementById('edit-lastName').value = m.lastName || '';
+      document.getElementById('edit-phone').value = m.phone || '';
+      document.getElementById('edit-county').value = m.county || '';
+      document.getElementById('edit-address').value = m.homeAddress || '';
+      renderPayouts(m.payoutMethods || []);
     }
 
-    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    function maskAccount(acc) {
+      if (!acc || acc.length < 5) return '••••';
+      return '••••' + String(acc).slice(-4);
+    }
+
+    function renderPayouts(methods) {
+      const el = document.getElementById('payout-list');
+      if (!methods || !methods.length) {
+        el.innerHTML = '<p class="text-gray-500 text-sm">No payout methods yet. Add one below so the Circle can send support when approved.</p>';
+        return;
+      }
+      el.innerHTML = methods.map((m, i) => {
+        const typeLabel = { bank: 'Bank transfer', mobile: 'Mobile money', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', other: 'Other' }[m.type] || m.type;
+        return `
+          <div class="flex items-start justify-between gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50/80">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-semibold uppercase tracking-wide text-esu-700 bg-esu-50 px-2 py-0.5 rounded">${esc(typeLabel)}</span>
+                ${m.primary ? '<span class="text-xs font-medium text-white bg-esu-600 px-2 py-0.5 rounded">Primary</span>' : ''}
+              </div>
+              <p class="font-medium text-gray-900">${esc(m.accountName || '')}</p>
+              <p class="text-sm text-gray-600">${esc(m.provider || '')} · ${maskAccount(m.accountNumber)}</p>
+              ${m.routing ? `<p class="text-xs text-gray-500 mt-0.5">Routing/Code: ${maskAccount(m.routing)}</p>` : ''}
+              ${m.notes ? `<p class="text-xs text-gray-500 mt-1">${esc(m.notes)}</p>` : ''}
+            </div>
+            <button type="button" data-remove="${i}" class="remove-payout text-xs text-red-600 hover:text-red-700 font-medium whitespace-nowrap">Remove</button>
+          </div>`;
+      }).join('');
+      el.querySelectorAll('.remove-payout').forEach(btn => {
+        btn.addEventListener('click', () => removePayout(parseInt(btn.dataset.remove, 10)));
+      });
+    }
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = s == null ? '' : String(s);
+      return d.innerHTML;
+    }
 
     function renderList(id, items, empty) {
       const el = document.getElementById(id);
-      if (!items.length) { el.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">' + empty + '</p>'; return; }
+      if (!items.length) {
+        el.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">' + empty + '</p>';
+        return;
+      }
       el.innerHTML = items.map(item => {
         const when = item.createdAt && item.createdAt.toDate ? item.createdAt.toDate().toLocaleString() : '';
-        return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition bg-gray-50/50">' +
+        return '<div class="border border-gray-100 rounded-xl p-4 hover:border-esu-200 transition bg-white">' +
           '<div class="flex justify-between gap-2 mb-2"><span class="text-xs font-semibold uppercase text-esu-600 bg-esu-50 px-2 py-0.5 rounded">' + esc(item.type || '') + '</span>' +
           '<span class="text-xs text-gray-400">' + when + '</span></div>' +
           '<p class="text-sm text-gray-800 leading-relaxed">' + esc(item.body || '') + '</p>' +
@@ -429,20 +523,32 @@
     }
 
     function listenFeeds() {
-      onSnapshot(query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(20)), snap => {
-        renderList('requests-list', snap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'No open requests yet. Be the first to speak up.');
-      }, () => { document.getElementById('requests-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>'; });
-      onSnapshot(query(collection(db, 'offers'), orderBy('createdAt', 'desc'), limit(20)), snap => {
-        renderList('offers-list', snap.docs.map(d => Object.assign({ id: d.id }, d.data())), 'No offers yet. Share what you can give.');
-      }, () => { document.getElementById('offers-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>'; });
+      onSnapshot(query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(30)), snap => {
+        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        renderList('requests-list', items, 'No open requests yet. Be the first to speak up.');
+        const stat = document.getElementById('stat-requests');
+        if (stat) stat.textContent = items.length;
+      }, () => {
+        document.getElementById('requests-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>';
+      });
+      onSnapshot(query(collection(db, 'offers'), orderBy('createdAt', 'desc'), limit(30)), snap => {
+        const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        renderList('offers-list', items, 'No offers yet. Share what you can give.');
+        const stat = document.getElementById('stat-offers');
+        if (stat) stat.textContent = items.length;
+      }, () => {
+        document.getElementById('offers-list').innerHTML = '<p class="text-sm text-gray-500 text-center py-6">Unable to load. Check Firestore rules.</p>';
+      });
     }
 
+    // Auth
     onAuthStateChanged(auth, async (user) => {
       if (!user) { showAuth(); return; }
       currentUser = user;
       try {
         const snap = await getDoc(doc(db, 'members', user.uid));
         memberProfile = snap.exists() ? snap.data() : { firstName: user.displayName || 'Member', email: user.email };
+        if (!memberProfile.email) memberProfile.email = user.email;
         fillProfile(memberProfile);
         showDash();
         listenFeeds();
@@ -459,6 +565,87 @@
       window.location.href = 'index.html';
     });
 
+    // Profile save
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const updates = {
+        firstName: document.getElementById('edit-firstName').value.trim(),
+        lastName: document.getElementById('edit-lastName').value.trim(),
+        phone: document.getElementById('edit-phone').value.trim(),
+        county: document.getElementById('edit-county').value.trim(),
+        homeAddress: document.getElementById('edit-address').value.trim()
+      };
+      try {
+        await updateDoc(doc(db, 'members', currentUser.uid), updates);
+        memberProfile = { ...memberProfile, ...updates };
+        fillProfile(memberProfile);
+        const msg = document.getElementById('profile-msg');
+        msg.textContent = 'Profile saved.';
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 2500);
+      } catch (err) {
+        alert('Could not save profile. Check that you are signed in and Firestore rules allow member updates.');
+      }
+    });
+
+    // Payout add
+    document.getElementById('payout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const method = {
+        id: Date.now().toString(36),
+        type: document.getElementById('payout-type').value,
+        accountName: document.getElementById('payout-name').value.trim(),
+        provider: document.getElementById('payout-provider').value.trim(),
+        accountNumber: document.getElementById('payout-account').value.trim(),
+        routing: document.getElementById('payout-routing').value.trim(),
+        notes: document.getElementById('payout-notes').value.trim(),
+        primary: document.getElementById('payout-primary').checked,
+        addedAt: new Date().toISOString()
+      };
+      let methods = Array.isArray(memberProfile.payoutMethods) ? [...memberProfile.payoutMethods] : [];
+      if (method.primary) methods = methods.map(m => ({ ...m, primary: false }));
+      methods.push(method);
+      try {
+        await updateDoc(doc(db, 'members', currentUser.uid), { payoutMethods: methods });
+        memberProfile.payoutMethods = methods;
+        renderPayouts(methods);
+        document.getElementById('payout-form').reset();
+        const msg = document.getElementById('payout-msg');
+        msg.textContent = 'Payout method saved.';
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 2500);
+      } catch (err) {
+        // Fallback: create/merge if update fails (new field)
+        try {
+          await setDoc(doc(db, 'members', currentUser.uid), { payoutMethods: methods }, { merge: true });
+          memberProfile.payoutMethods = methods;
+          renderPayouts(methods);
+          document.getElementById('payout-form').reset();
+          const msg = document.getElementById('payout-msg');
+          msg.textContent = 'Payout method saved.';
+          msg.classList.remove('hidden');
+        } catch (e2) {
+          alert('Could not save payout method. Check Firestore rules.');
+        }
+      }
+    });
+
+    async function removePayout(index) {
+      if (!currentUser || !memberProfile.payoutMethods) return;
+      if (!confirm('Remove this payout method?')) return;
+      const methods = memberProfile.payoutMethods.filter((_, i) => i !== index);
+      try {
+        await updateDoc(doc(db, 'members', currentUser.uid), { payoutMethods: methods });
+        memberProfile.payoutMethods = methods;
+        renderPayouts(methods);
+      } catch (err) {
+        alert('Could not remove method.');
+      }
+    }
+
+    // Ask / Offer posts
     async function postItem(col, typeId, bodyId, msgId) {
       if (!currentUser) return;
       const body = document.getElementById(bodyId).value.trim();
@@ -466,19 +653,28 @@
       const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
       try {
         await addDoc(collection(db, col), {
-          type: document.getElementById(typeId).value, body,
-          authorId: currentUser.uid, authorName: name, createdAt: serverTimestamp()
+          type: document.getElementById(typeId).value,
+          body,
+          authorId: currentUser.uid,
+          authorName: name,
+          createdAt: serverTimestamp()
         });
         document.getElementById(msgId).textContent = 'Posted to the Circle.';
         document.getElementById(msgId).classList.remove('hidden');
         document.getElementById(bodyId).value = '';
-        setTimeout(hidePanels, 1000);
+        setTimeout(hidePanels, 1200);
       } catch (err) {
         alert('Could not post. Check Firestore rules for signed-in writes.');
       }
     }
-    document.getElementById('ask-form').addEventListener('submit', e => { e.preventDefault(); postItem('requests', 'ask-type', 'ask-body', 'ask-msg'); });
-    document.getElementById('offer-form').addEventListener('submit', e => { e.preventDefault(); postItem('offers', 'offer-type', 'offer-body', 'offer-msg'); });
+    document.getElementById('ask-form').addEventListener('submit', e => {
+      e.preventDefault();
+      postItem('requests', 'ask-type', 'ask-body', 'ask-msg');
+    });
+    document.getElementById('offer-form').addEventListener('submit', e => {
+      e.preventDefault();
+      postItem('offers', 'offer-type', 'offer-body', 'offer-msg');
+    });
   </script>
 </body>
 </html>
