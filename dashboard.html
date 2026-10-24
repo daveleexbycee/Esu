@@ -351,7 +351,7 @@
           <div class="flex items-start justify-between gap-4 mb-2">
             <div>
               <h3 class="text-xl font-bold">Payout methods</h3>
-              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (U.S. bank transfer, Zelle, PayPal, Cash App, or Venmo).</p>
+              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (U.S. bank transfer, Zelle, PayPal, credit card, check, and more).</p>
             </div>
           </div>
 
@@ -376,6 +376,11 @@
                   <option value="paypal">PayPal</option>
                   <option value="cashapp">Cash App</option>
                   <option value="venmo">Venmo</option>
+                  <option value="creditcard">Credit / debit card</option>
+                  <option value="check">Paper check (by mail)</option>
+                  <option value="applepay">Apple Pay</option>
+                  <option value="googlepay">Google Pay</option>
+                  <option value="wire">Wire transfer</option>
                   <option value="other">Other (U.S. only)</option>
                 </select>
               </div>
@@ -402,14 +407,14 @@
                     <option>Discover Bank</option>
                     <option>Navy Federal Credit Union</option>
                     <option>Other U.S. bank / credit union</option>
-                    <option value="N/A">N/A (Zelle / PayPal / Cash App / Venmo)</option>
+                    <option value="N/A">N/A (Zelle / PayPal / Cash App / Venmo / Card)</option>
                   </select>
                 </div>
               </div>
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Account number or payment ID</label>
-                  <input id="payout-account" type="text" required placeholder="Account number, email, or $cashtag / phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <input id="payout-account" type="text" required placeholder="Account number, email, card last 4, or $cashtag / phone" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Routing number (for bank transfer)</label>
@@ -606,7 +611,7 @@
         return;
       }
       el.innerHTML = methods.map((m, i) => {
-        const typeLabel = { bank: 'U.S. Bank transfer', zelle: 'Zelle', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', other: 'Other' }[m.type] || m.type;
+        const typeLabel = { bank: 'U.S. Bank transfer', zelle: 'Zelle', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', creditcard: 'Credit / debit card', check: 'Paper check', applepay: 'Apple Pay', googlepay: 'Google Pay', wire: 'Wire transfer', other: 'Other' }[m.type] || m.type;
         return `
           <div class="flex items-start justify-between gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50/80">
             <div>
