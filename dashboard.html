@@ -1148,6 +1148,7 @@
     });
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
+      try { clearLocalSupport(); } catch (_) {}
       localStorage.removeItem('esu_member');
       await signOut(auth);
       window.location.href = 'index.html';
@@ -1363,17 +1364,60 @@
       postItem('offers', 'offer-type', 'offer-body', 'offer-msg');
     });
 
-    // ---------- Support chat ----------
+    // ---------- Support chat (persists until sign-out) ----------
     const supportFab = document.getElementById('support-fab');
     const supportPanel = document.getElementById('support-panel');
     const supportClose = document.getElementById('support-close');
     const supportMessages = document.getElementById('support-messages');
     const supportForm = document.getElementById('support-form');
     const supportInput = document.getElementById('support-input');
+    let supportUnsub = null;
+    const WELCOME_HTML = '<div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-gray-600 shadow-sm">Hi — how can the Circle help you today? Ask about membership, payouts, or getting support.</div>';
+
+    function supportStorageKey() {
+      return currentUser ? ('esu_support_chat_' + currentUser.uid) : null;
+    }
+
+    function loadLocalSupport() {
+      const key = supportStorageKey();
+      if (!key) return [];
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveLocalSupport(messages) {
+      const key = supportStorageKey();
+      if (!key) return;
+      try {
+        localStorage.setItem(key, JSON.stringify(messages.slice(-100)));
+      } catch (_) {}
+    }
+
+    function clearLocalSupport() {
+      if (!currentUser) return;
+      try {
+        localStorage.removeItem('esu_support_chat_' + currentUser.uid);
+      } catch (_) {}
+    }
+
+    function renderSupportMessages(list) {
+      if (!supportMessages) return;
+      supportMessages.innerHTML = WELCOME_HTML;
+      (list || []).forEach(m => {
+        const mine = m.mine === true || (m.authorId && currentUser && m.authorId === currentUser.uid && !m.fromAdmin);
+        appendSupportBubble(m.body || '', mine, false);
+      });
+    }
 
     function openSupport() {
       supportPanel.classList.remove('hidden');
       supportInput?.focus();
+      // Instant restore from local storage (survives refresh)
+      renderSupportMessages(loadLocalSupport());
       loadSupportThread();
     }
     function closeSupport() { supportPanel.classList.add('hidden'); }
@@ -1383,39 +1427,66 @@
     });
     supportClose?.addEventListener('click', closeSupport);
 
-    function appendSupportBubble(text, mine) {
+    function appendSupportBubble(text, mine, scroll = true) {
       const div = document.createElement('div');
       div.className = mine
         ? 'bg-esu-600 text-white rounded-xl px-3 py-2 ml-8 shadow-sm'
         : 'bg-white border border-gray-100 rounded-xl px-3 py-2 mr-8 text-gray-700 shadow-sm';
       div.textContent = text;
       supportMessages.appendChild(div);
-      supportMessages.scrollTop = supportMessages.scrollHeight;
+      if (scroll) supportMessages.scrollTop = supportMessages.scrollHeight;
     }
 
-    async function loadSupportThread() {
+    function mergeSupportLists(localList, remoteList) {
+      const map = new Map();
+      localList.forEach(m => {
+        const id = m.id || (m.body + '|' + m.ts + '|' + (m.mine ? '1' : '0'));
+        map.set(id, m);
+      });
+      remoteList.forEach(m => {
+        const mine = !!(currentUser && m.authorId === currentUser.uid && !m.fromAdmin && m.authorId !== 'support');
+        const id = m.id || ('r-' + (m.body || '') + '|' + (m.createdAt?.seconds || ''));
+        map.set(id, {
+          id,
+          body: m.body || '',
+          mine,
+          authorId: m.authorId,
+          fromAdmin: m.fromAdmin || m.authorId === 'support',
+          ts: m.createdAt?.toDate ? m.createdAt.toDate().getTime() : (m.ts || Date.now())
+        });
+      });
+      return Array.from(map.values()).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    }
+
+    function loadSupportThread() {
       if (!currentUser || !supportMessages) return;
-      // Keep welcome message; load user's recent support messages
+      if (supportUnsub) {
+        try { supportUnsub(); } catch (_) {}
+        supportUnsub = null;
+      }
       try {
-        onSnapshot(
-          query(
-            collection(db, 'supportMessages'),
-            orderBy('createdAt', 'asc'),
-            limit(50)
-          ),
+        supportUnsub = onSnapshot(
+          query(collection(db, 'supportMessages'), orderBy('createdAt', 'asc'), limit(100)),
           (snap) => {
-            const mine = snap.docs
+            const remote = snap.docs
               .map(d => Object.assign({ id: d.id }, d.data()))
-              .filter(m => m.authorId === currentUser.uid || m.toUserId === currentUser.uid);
-            // Rebuild list with welcome + messages
-            supportMessages.innerHTML = '<div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-gray-600 shadow-sm">Hi — how can the Circle help you today? Ask about membership, payouts, or getting support.</div>';
-            mine.forEach(m => {
-              appendSupportBubble(m.body || '', m.authorId === currentUser.uid);
-            });
+              .filter(m =>
+                m.authorId === currentUser.uid ||
+                m.toUserId === currentUser.uid ||
+                (m.fromAdmin && m.toUserId === currentUser.uid)
+              );
+            const merged = mergeSupportLists(loadLocalSupport(), remote);
+            saveLocalSupport(merged);
+            renderSupportMessages(merged);
           },
-          () => { /* rules may block; local-only still works on send */ }
+          () => {
+            // Firestore blocked — keep local history
+            renderSupportMessages(loadLocalSupport());
+          }
         );
-      } catch (_) {}
+      } catch (_) {
+        renderSupportMessages(loadLocalSupport());
+      }
     }
 
     supportForm?.addEventListener('submit', async (e) => {
@@ -1428,7 +1499,18 @@
       if (!body) return;
       const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
       supportInput.value = '';
+
+      const localMsg = {
+        id: 'local-' + Date.now(),
+        body,
+        mine: true,
+        authorId: currentUser.uid,
+        ts: Date.now()
+      };
+      const next = loadLocalSupport().concat([localMsg]);
+      saveLocalSupport(next);
       appendSupportBubble(body, true);
+
       try {
         await addDoc(collection(db, 'supportMessages'), {
           body,
@@ -1438,11 +1520,9 @@
           toUserId: 'support',
           createdAt: serverTimestamp()
         });
-        setTimeout(() => {
-          appendSupportBubble('Thanks — the Circle support team will review your message. For urgent needs, also post in Ask for support on the Feed.', false);
-        }, 600);
       } catch (err) {
-        appendSupportBubble('Message saved on your device. If it does not reach support, check that you are signed in and Firestore rules allow supportMessages.', false);
+        // Still kept in localStorage until sign-out
+        appendSupportBubble('Saved on this device. If support does not see it, check your connection — your history stays until you sign out.', false);
       }
     });
 
