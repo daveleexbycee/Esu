@@ -400,8 +400,12 @@
                     <option>Ally Bank</option>
                     <option>Discover Bank</option>
                     <option>Navy Federal Credit Union</option>
-                    <option>Other U.S. bank / credit union</option>
+                    <option value="__other__">Other U.S. bank / credit union (type name)</option>
                   </select>
+                  <div id="payout-bank-other-wrap" class="hidden mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enter your U.S. bank or credit union name</label>
+                    <input id="payout-bank-other" type="text" placeholder="e.g. First Horizon, Regions, local credit union name" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  </div>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Bank holder name</label>
@@ -730,26 +734,26 @@
 
     // ---------- Mock data (shown when Firestore is empty) ----------
     const MOCK_REQUESTS = [
-      { type: 'Financial support', body: 'Need help covering unexpected medical bills after a short hospital stay. Looking for any guidance or temporary support from the Circle.', authorName: 'Maria J.', daysAgo: 0 },
-      { type: 'Business / career help', body: 'Launching a small catering side hustle. Would love advice on permits in Broward County and anyone who has walked this path.', authorName: 'James K.', daysAgo: 0 },
-      { type: 'Emergency / disaster', body: 'Roof damage from the last storm. Temporary housing suggestions or contacts for local relief would mean a lot.', authorName: 'Angela R.', daysAgo: 1 },
-      { type: 'Mentorship', body: 'First-generation college student looking for a mentor in healthcare administration. Happy to give back later.', authorName: 'David O.', daysAgo: 1 },
-      { type: 'Resources / goods', body: 'Need gently used work clothes (professional) for interviews — men\'s size M/L. Can pick up in Margate area.', authorName: 'Chris P.', daysAgo: 2 },
-      { type: 'Financial support', body: 'Behind on utilities this month after reduced hours. Any help or payment plan tips appreciated.', authorName: 'Sofia M.', daysAgo: 2 },
-      { type: 'Business / career help', body: 'Freelance graphic designer seeking warm intros to local nonprofits that need design work.', authorName: 'Nina T.', daysAgo: 3 },
-      { type: 'Other', body: 'Looking for a ride-share buddy for weekly dialysis appointments in Fort Lauderdale.', authorName: 'Robert H.', daysAgo: 3 },
-      { type: 'Mentorship', body: 'Want to learn bookkeeping for my small shop. Anyone willing to do a few Zoom sessions?', authorName: 'Elena V.', daysAgo: 4 },
-      { type: 'Emergency / disaster', body: 'Car broke down — need it for work. Looking for a trusted mechanic recommendation or temporary transport ideas.', authorName: 'Marcus L.', daysAgo: 4 },
-      { type: 'Financial support', body: 'Childcare gap while starting a new job. Short-term support would help us stay on track.', authorName: 'Priya S.', daysAgo: 5 },
-      { type: 'Resources / goods', body: 'School supplies for two kids entering middle school. Backpacks and basic supplies needed.', authorName: 'Tina W.', daysAgo: 5 },
-      { type: 'Business / career help', body: 'Resume review and interview practice for retail management roles. Open to honest feedback.', authorName: 'Kevin B.', daysAgo: 6 },
-      { type: 'Mentorship', body: 'Aspiring social worker — would love to shadow or talk with someone already in the field in South Florida.', authorName: 'Aisha N.', daysAgo: 6 },
-      { type: 'Other', body: 'Looking for Spanish-English conversation practice partners in the Circle. Mutual learning.', authorName: 'Carlos D.', daysAgo: 7 },
-      { type: 'Financial support', body: 'Security deposit for a safer apartment. Escaping a difficult living situation. Grateful for any path forward.', authorName: 'Jordan F.', daysAgo: 7 },
-      { type: 'Resources / goods', body: 'Baby formula and diapers (size 3) until WIC renews next week.', authorName: 'Michelle A.', daysAgo: 8 },
-      { type: 'Business / career help', body: 'How did you price your first client as a consultant? Looking for real numbers and lessons.', authorName: 'Sam Y.', daysAgo: 9 },
-      { type: 'Emergency / disaster', body: 'Flooded apartment after pipe burst. Need temporary storage and cleaning contacts.', authorName: 'Lisa G.', daysAgo: 10 },
-      { type: 'Mentorship', body: 'Building a community garden project. Looking for people who have run neighborhood initiatives.', authorName: 'Omar C.', daysAgo: 12 }
+      { type: 'Financial support', body: 'Need help covering unexpected medical bills after a short hospital stay in Miami. Looking for any guidance or temporary support from the Circle.', authorName: 'Maria Johnson', daysAgo: 0 },
+      { type: 'Business / career help', body: 'Launching a small catering side hustle in Broward County, FL. Would love advice on local permits and anyone who has walked this path.', authorName: 'James Carter', daysAgo: 0 },
+      { type: 'Emergency / disaster', body: 'Roof damage from the last Florida storm. Temporary housing suggestions or contacts for local relief would mean a lot.', authorName: 'Angela Rivera', daysAgo: 1 },
+      { type: 'Mentorship', body: 'First-generation college student in Atlanta looking for a mentor in healthcare administration. Happy to give back later.', authorName: 'David Owens', daysAgo: 1 },
+      { type: 'Resources / goods', body: 'Need gently used work clothes (professional) for interviews — men\'s size M/L. Can pick up in Margate, FL area.', authorName: 'Chris Parker', daysAgo: 2 },
+      { type: 'Financial support', body: 'Behind on utilities this month after reduced hours in Houston. Any help or payment plan tips appreciated.', authorName: 'Sofia Martinez', daysAgo: 2 },
+      { type: 'Business / career help', body: 'Freelance graphic designer in Austin seeking warm intros to local nonprofits that need design work.', authorName: 'Nina Thompson', daysAgo: 3 },
+      { type: 'Other', body: 'Looking for a ride-share buddy for weekly dialysis appointments in Fort Lauderdale, FL.', authorName: 'Robert Hayes', daysAgo: 3 },
+      { type: 'Mentorship', body: 'Want to learn bookkeeping for my small shop in Charlotte, NC. Anyone willing to do a few Zoom sessions?', authorName: 'Elena Vargas', daysAgo: 4 },
+      { type: 'Emergency / disaster', body: 'Car broke down in Tampa — need it for work. Looking for a trusted mechanic recommendation or temporary transport ideas.', authorName: 'Marcus Lee', daysAgo: 4 },
+      { type: 'Financial support', body: 'Childcare gap in Orlando while starting a new job. Short-term support would help us stay on track.', authorName: 'Priya Sharma', daysAgo: 5 },
+      { type: 'Resources / goods', body: 'School supplies for two kids entering middle school in Jacksonville. Backpacks and basic supplies needed.', authorName: 'Tina Williams', daysAgo: 5 },
+      { type: 'Business / career help', body: 'Resume review and interview practice for retail management roles in Dallas. Open to honest feedback.', authorName: 'Kevin Brooks', daysAgo: 6 },
+      { type: 'Mentorship', body: 'Aspiring social worker in Chicago — would love to shadow or talk with someone already in the field.', authorName: 'Aisha Nelson', daysAgo: 6 },
+      { type: 'Other', body: 'Looking for Spanish-English conversation practice partners in the Circle. Based in Phoenix, AZ. Mutual learning.', authorName: 'Carlos Diaz', daysAgo: 7 },
+      { type: 'Financial support', body: 'Security deposit for a safer apartment in Las Vegas. Escaping a difficult living situation. Grateful for any path forward.', authorName: 'Jordan Foster', daysAgo: 7 },
+      { type: 'Resources / goods', body: 'Baby formula and diapers (size 3) in San Antonio until WIC renews next week.', authorName: 'Michelle Adams', daysAgo: 8 },
+      { type: 'Business / career help', body: 'How did you price your first client as a consultant in Denver? Looking for real numbers and lessons.', authorName: 'Sam Young', daysAgo: 9 },
+      { type: 'Emergency / disaster', body: 'Flooded apartment after pipe burst in Seattle. Need temporary storage and cleaning contacts.', authorName: 'Lisa Grant', daysAgo: 10 },
+      { type: 'Mentorship', body: 'Building a community garden project in Nashville. Looking for people who have run neighborhood initiatives in the U.S.', authorName: 'Omar Collins', daysAgo: 12 }
     ].map((r, i) => ({
       id: 'mock-req-' + i,
       type: r.type,
@@ -761,26 +765,26 @@
     }));
 
     const MOCK_OFFERS = [
-      { type: 'Skills / professional help', body: 'I\'m a licensed bookkeeper. Happy to do a free 1-hour review of your small business books or QuickBooks setup.', authorName: 'Patricia M.', daysAgo: 0 },
-      { type: 'Mentorship', body: '20 years in healthcare admin. Open to mentoring members exploring careers in hospitals or clinics.', authorName: 'Dr. Helen K.', daysAgo: 0 },
-      { type: 'Financial contribution', body: 'Can contribute toward emergency utility or grocery support this month. Prefer coordinated through Circle admins.', authorName: 'Anonymous Member', daysAgo: 1 },
-      { type: 'Time / volunteering', body: 'Available Saturdays for moving help, yard work, or packing. South Florida — Margate to Fort Lauderdale.', authorName: 'Tony R.', daysAgo: 1 },
-      { type: 'Connections / introductions', body: 'I work in local government permitting. Can point people in the right direction for small business licenses.', authorName: 'Diane S.', daysAgo: 2 },
-      { type: 'Goods / resources', body: 'Have extra professional clothing (women\'s 8–12) and two pairs of lightly used work shoes. Free to Circle members.', authorName: 'Rachel B.', daysAgo: 2 },
-      { type: 'Skills / professional help', body: 'Web developer — can help fix or build a simple site for a member\'s side business or nonprofit idea.', authorName: 'Alex C.', daysAgo: 3 },
-      { type: 'Mentorship', body: 'Former teacher. Happy to tutor middle/high school math or help with college applications.', authorName: 'Mrs. Gloria T.', daysAgo: 3 },
-      { type: 'Time / volunteering', body: 'Can drive members to medical appointments 2–3 times a month (Broward County).', authorName: 'Frank L.', daysAgo: 4 },
-      { type: 'Financial contribution', body: 'Able to match small emergency asks up to a set amount this quarter. Message Circle coordinators.', authorName: 'Community Partner', daysAgo: 4 },
-      { type: 'Goods / resources', body: 'Donating a gently used laptop suitable for school or job search. First come, verified need.', authorName: 'Mike P.', daysAgo: 5 },
-      { type: 'Connections / introductions', body: 'Network in South Florida nonprofits. Can intro members looking for volunteer or entry-level roles.', authorName: 'Sandra H.', daysAgo: 5 },
-      { type: 'Skills / professional help', body: 'Resume writing and LinkedIn makeovers — free for Circle members this month (limited slots).', authorName: 'Career Coach Jen', daysAgo: 6 },
-      { type: 'Mentorship', body: 'Ran a successful food truck. Happy to share what worked (and what didn\'t) with aspiring food entrepreneurs.', authorName: 'Chef Ray', daysAgo: 7 },
-      { type: 'Time / volunteering', body: 'Spanish bilingual. Can help translate documents or accompany members to appointments.', authorName: 'Lucia M.', daysAgo: 8 },
-      { type: 'Goods / resources', body: 'Extra school supplies and backpacks ready for the school year. Coordinating drop-off.', authorName: 'Parent Circle Group', daysAgo: 8 },
-      { type: 'Financial contribution', body: 'Sponsoring two months of a member\'s childcare gap while they start a new job. Coordinate via admins.', authorName: 'Giving Partner', daysAgo: 9 },
-      { type: 'Skills / professional help', body: 'Notary public — free notarization for Circle members by appointment in Margate.', authorName: 'Notary Kim', daysAgo: 10 },
-      { type: 'Connections / introductions', body: 'Contacts at local credit unions for second-chance banking and small loans. Happy to intro.', authorName: 'Marcus W.', daysAgo: 11 },
-      { type: 'Mentorship', body: 'Mental health peer support (not therapy). Lived experience with recovery. Open to listening.', authorName: 'Peer Supporter', daysAgo: 12 }
+      { type: 'Skills / professional help', body: 'I\'m a licensed bookkeeper in Florida. Happy to do a free 1-hour review of your small business books or QuickBooks setup.', authorName: 'Patricia Miller', daysAgo: 0 },
+      { type: 'Mentorship', body: '20 years in healthcare admin in Georgia. Open to mentoring members exploring careers in hospitals or clinics.', authorName: 'Dr. Helen Kim', daysAgo: 0 },
+      { type: 'Financial contribution', body: 'Can contribute toward emergency utility or grocery support this month (U.S. members). Prefer coordinated through Circle admins.', authorName: 'Anonymous Member', daysAgo: 1 },
+      { type: 'Time / volunteering', body: 'Available Saturdays for moving help, yard work, or packing. South Florida — Margate to Fort Lauderdale.', authorName: 'Tony Richards', daysAgo: 1 },
+      { type: 'Connections / introductions', body: 'I work in local government permitting in Broward County. Can point people in the right direction for small business licenses.', authorName: 'Diane Scott', daysAgo: 2 },
+      { type: 'Goods / resources', body: 'Have extra professional clothing (women\'s 8–12) and two pairs of lightly used work shoes in Miami. Free to Circle members.', authorName: 'Rachel Bennett', daysAgo: 2 },
+      { type: 'Skills / professional help', body: 'Web developer in Raleigh, NC — can help fix or build a simple site for a member\'s side business or nonprofit idea.', authorName: 'Alex Chen', daysAgo: 3 },
+      { type: 'Mentorship', body: 'Former teacher in Ohio. Happy to tutor middle/high school math or help with U.S. college applications.', authorName: 'Gloria Turner', daysAgo: 3 },
+      { type: 'Time / volunteering', body: 'Can drive members to medical appointments 2–3 times a month (Broward County, FL).', authorName: 'Frank Lopez', daysAgo: 4 },
+      { type: 'Financial contribution', body: 'Able to match small emergency asks up to a set amount this quarter for U.S.-based members. Message Circle coordinators.', authorName: 'Community Partner', daysAgo: 4 },
+      { type: 'Goods / resources', body: 'Donating a gently used laptop suitable for school or job search. Pickup in Orlando area. First come, verified need.', authorName: 'Mike Patterson', daysAgo: 5 },
+      { type: 'Connections / introductions', body: 'Network in South Florida nonprofits. Can intro members looking for volunteer or entry-level roles.', authorName: 'Sandra Hughes', daysAgo: 5 },
+      { type: 'Skills / professional help', body: 'Resume writing and LinkedIn makeovers — free for Circle members this month (limited slots). Based in New York.', authorName: 'Career Coach Jen', daysAgo: 6 },
+      { type: 'Mentorship', body: 'Ran a successful food truck in Los Angeles. Happy to share what worked (and what didn\'t) with aspiring food entrepreneurs.', authorName: 'Chef Ray', daysAgo: 7 },
+      { type: 'Time / volunteering', body: 'Spanish bilingual in Texas. Can help translate documents or accompany members to appointments.', authorName: 'Lucia Morales', daysAgo: 8 },
+      { type: 'Goods / resources', body: 'Extra school supplies and backpacks ready for the school year. Coordinating drop-off in Tampa Bay.', authorName: 'Parent Circle Group', daysAgo: 8 },
+      { type: 'Financial contribution', body: 'Sponsoring two months of a member\'s childcare gap in the U.S. while they start a new job. Coordinate via admins.', authorName: 'Giving Partner', daysAgo: 9 },
+      { type: 'Skills / professional help', body: 'Notary public — free notarization for Circle members by appointment in Margate, FL.', authorName: 'Notary Kim', daysAgo: 10 },
+      { type: 'Connections / introductions', body: 'Contacts at local U.S. credit unions for second-chance banking and small loans. Happy to intro.', authorName: 'Marcus Wright', daysAgo: 11 },
+      { type: 'Mentorship', body: 'Mental health peer support (not therapy). Lived experience with recovery. Open to listening. Based in Colorado.', authorName: 'Peer Supporter', daysAgo: 12 }
     ].map((o, i) => ({
       id: 'mock-off-' + i,
       type: o.type,
@@ -890,8 +894,8 @@
 
     const MOCK_ENGAGEMENTS = [
       { causeId: 'community', action: 'offer_help', note: 'Can review resumes for members job-hunting this month.', authorName: 'Patricia M.', daysAgo: 0 },
-      { causeId: 'disaster', action: 'volunteer', note: 'Available for storm cleanup weekends in Broward.', authorName: 'Tony R.', daysAgo: 1 },
-      { causeId: 'animals', action: 'resources', note: 'Donating pet food and supplies to local foster network.', authorName: 'Rachel B.', daysAgo: 1 },
+      { causeId: 'disaster', action: 'volunteer', note: 'Available for storm cleanup weekends in Broward County, FL.', authorName: 'Tony R.', daysAgo: 1 },
+      { causeId: 'animals', action: 'resources', note: 'Donating pet food and supplies to a local U.S. foster network.', authorName: 'Rachel B.', daysAgo: 1 },
       { causeId: 'service', action: 'skills', note: 'Web help for members launching community projects.', authorName: 'Alex C.', daysAgo: 2 },
       { causeId: 'community', action: 'financial', note: 'Can contribute to emergency utility support pool.', authorName: 'Anonymous Member', daysAgo: 2 },
       { causeId: 'disaster', action: 'need_help', note: 'Need temporary housing contacts after water damage.', authorName: 'Angela R.', daysAgo: 3 },
@@ -1208,6 +1212,15 @@
     document.getElementById('payout-type')?.addEventListener('change', syncPayoutFields);
     syncPayoutFields();
 
+    function syncBankOther() {
+      const sel = document.getElementById('payout-bank-name');
+      const wrap = document.getElementById('payout-bank-other-wrap');
+      if (!sel || !wrap) return;
+      wrap.classList.toggle('hidden', sel.value !== '__other__');
+    }
+    document.getElementById('payout-bank-name')?.addEventListener('change', syncBankOther);
+    syncBankOther();
+
     // Payout add
     document.getElementById('payout-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1225,13 +1238,20 @@
       let extra = {};
 
       if (type === 'bank') {
-        provider = document.getElementById('payout-bank-name').value.trim();
+        let bankSel = document.getElementById('payout-bank-name').value.trim();
+        if (bankSel === '__other__') {
+          provider = (document.getElementById('payout-bank-other')?.value || '').trim();
+        } else {
+          provider = bankSel;
+        }
         accountName = document.getElementById('payout-holder-name').value.trim();
         routing = document.getElementById('payout-routing').value.trim();
         accountNumber = document.getElementById('payout-account').value.trim();
         extra.bankAddress = document.getElementById('payout-bank-address').value.trim();
         if (!provider || !accountName || !routing || !accountNumber) {
-          alert('Please fill Bank name, Bank holder name, Routing number, and Account number.');
+          alert(bankSel === '__other__'
+            ? 'Please type your U.S. bank or credit union name, plus holder name, routing, and account number.'
+            : 'Please fill Bank name, Bank holder name, Routing number, and Account number.');
           return;
         }
       } else if (type === 'check') {
