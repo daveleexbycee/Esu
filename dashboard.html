@@ -351,7 +351,7 @@
           <div class="flex items-start justify-between gap-4 mb-2">
             <div>
               <h3 class="text-xl font-bold">Payout methods</h3>
-              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds (U.S. bank transfer, Zelle, PayPal, credit card, check, and more).</p>
+              <p class="text-gray-600 text-sm mt-1">Add how the Circle can send you support funds. Active: U.S. Bank transfer / ACH, Paper check / Email, and payment links.</p>
             </div>
           </div>
 
@@ -371,32 +371,20 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Method type</label>
                 <select id="payout-type" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
-                  <option value="bank">U.S. Bank transfer (ACH)</option>
-                  <option value="zelle">Zelle</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="cashapp">Cash App</option>
-                  <option value="venmo">Venmo</option>
-                  <option value="creditcard">Credit / debit card</option>
-                  <option value="check">Paper check (by mail)</option>
-                  <option value="applepay">Apple Pay</option>
-                  <option value="googlepay">Google Pay</option>
-                  <option value="wire">Wire transfer</option>
-                  <option value="other">Other (U.S. only)</option>
+                  <option value="bank">U.S. Bank transfer / ACH</option>
+                  <option value="check">Paper check / Email</option>
+                  <option value="creditcard" disabled>Credit card / Debit card — Under maintenance</option>
+                  <option value="digital" disabled>PayPal / Venmo &amp; Cash App — Under maintenance</option>
+                  <option value="other">Others (Link to pay to)</option>
                 </select>
                 <p id="payout-type-hint" class="text-xs text-gray-500 mt-1.5">Direct deposit to a U.S. checking or savings account.</p>
               </div>
 
-              <!-- Shared: recipient name -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1" id="payout-name-label">Account holder name</label>
-                <input id="payout-name" type="text" required placeholder="Name exactly as on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-              </div>
-
-              <!-- BANK / WIRE fields -->
+              <!-- U.S. Bank transfer / ACH -->
               <div id="fields-bank" class="payout-fields space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">U.S. Bank</label>
-                  <select id="payout-provider" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank name</label>
+                  <select id="payout-bank-name" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
                     <option value="">Select bank…</option>
                     <option>Chase</option>
                     <option>Bank of America</option>
@@ -414,121 +402,86 @@
                     <option>Other U.S. bank / credit union</option>
                   </select>
                 </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank holder name</label>
+                  <input id="payout-holder-name" type="text" placeholder="Name exactly as on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
                 <div class="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Routing number</label>
+                    <input id="payout-routing" type="text" placeholder="9-digit ABA routing number" maxlength="9" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Account number</label>
                     <input id="payout-account" type="text" placeholder="Checking or savings account number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Routing number (ABA)</label>
-                    <input id="payout-routing" type="text" placeholder="9-digit routing number" maxlength="9" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-                  </div>
                 </div>
-                <div id="wire-extra" class="hidden">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank address (for wire)</label>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank address <span class="text-gray-400 font-normal">(optional)</span></label>
                   <input id="payout-bank-address" type="text" placeholder="Bank branch address if known" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
               </div>
 
-              <!-- PAYPAL -->
-              <div id="fields-paypal" class="payout-fields hidden space-y-4">
+              <!-- Paper check / Email -->
+              <div id="fields-check" class="payout-fields hidden space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">PayPal email</label>
-                  <input id="payout-paypal-email" type="email" placeholder="you@email.com" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input id="payout-check-name" type="text" placeholder="Payee / recipient name" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
-                <p class="text-xs text-gray-500">Must match the email on your PayPal account.</p>
-              </div>
-
-              <!-- ZELLE -->
-              <div id="fields-zelle" class="payout-fields hidden space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Zelle email or phone</label>
-                  <input id="payout-zelle-id" type="text" placeholder="Email or U.S. mobile number enrolled in Zelle" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                  <textarea id="payout-check-address" rows="2" placeholder="Street, City, State, ZIP" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
                 </div>
-              </div>
-
-              <!-- CASH APP -->
-              <div id="fields-cashapp" class="payout-fields hidden space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Cash App $Cashtag</label>
-                  <input id="payout-cashtag" type="text" placeholder="$YourCashtag" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-                </div>
-              </div>
-
-              <!-- VENMO -->
-              <div id="fields-venmo" class="payout-fields hidden space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Venmo username</label>
-                  <input id="payout-venmo" type="text" placeholder="@username" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-                </div>
-              </div>
-
-              <!-- CREDIT CARD (no full PAN — last 4 + billing only) -->
-              <div id="fields-creditcard" class="payout-fields hidden space-y-4">
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900">
-                  For security we only store the last 4 digits and card brand — never the full card number.
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-gray-400 font-normal">(optional)</span></label>
+                  <input id="payout-check-email" type="email" placeholder="you@email.com" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
                 <div class="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Card brand</label>
-                    <select id="payout-card-brand" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none">
-                      <option value="">Select…</option>
-                      <option>Visa</option>
-                      <option>Mastercard</option>
-                      <option>American Express</option>
-                      <option>Discover</option>
-                      <option>Other</option>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Account number <span class="text-gray-400 font-normal">(optional)</span></label>
+                    <input id="payout-check-account" type="text" placeholder="Optional account number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last 4 digits</label>
-                    <input id="payout-card-last4" type="text" maxlength="4" placeholder="1234" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bank name <span class="text-gray-400 font-normal">(optional)</span></label>
+                    <input id="payout-check-bank" type="text" placeholder="Optional bank name" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                   </div>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Name on card</label>
-                  <input id="payout-card-name" type="text" placeholder="As printed on card" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Bank address <span class="text-gray-400 font-normal">(optional)</span></label>
+                  <input id="payout-check-bank-address" type="text" placeholder="Optional bank address" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
               </div>
 
-              <!-- PAPER CHECK -->
-              <div id="fields-check" class="payout-fields hidden space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Payee name (on check)</label>
-                  <input id="payout-check-payee" type="text" placeholder="Name to print on the check" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Mailing address</label>
-                  <textarea id="payout-check-address" rows="2" placeholder="Street, City, State, ZIP" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
+              <!-- Under maintenance notice (card / digital) -->
+              <div id="fields-maintenance" class="payout-fields hidden">
+                <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
+                  <p class="font-semibold mb-1">This method is under maintenance</p>
+                  <p>Credit/debit cards and PayPal, Venmo &amp; Cash App are temporarily unavailable. Please use <strong>U.S. Bank transfer / ACH</strong>, <strong>Paper check / Email</strong>, or <strong>Others (Link to pay to)</strong>.</p>
                 </div>
               </div>
 
-              <!-- APPLE / GOOGLE PAY -->
-              <div id="fields-wallet" class="payout-fields hidden space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1" id="wallet-id-label">Phone or email linked to wallet</label>
-                  <input id="payout-wallet-id" type="text" placeholder="Phone or email on the account" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-                </div>
-              </div>
-
-              <!-- OTHER -->
+              <!-- Others — Link to pay to -->
               <div id="fields-other" class="payout-fields hidden space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Payment details</label>
-                  <textarea id="payout-other-details" rows="2" placeholder="Describe how to send payment…" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none resize-none"></textarea>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Link to pay to</label>
+                  <input id="payout-pay-link" type="url" placeholder="https://…" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Name / label <span class="text-gray-400 font-normal">(optional)</span></label>
+                  <input id="payout-other-name" type="text" placeholder="e.g. My payment page" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Notes <span class="text-gray-400 font-normal">(optional)</span></label>
+                  <input id="payout-other-notes" type="text" placeholder="Any extra instructions" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
                 </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
-                <input id="payout-notes" type="text" placeholder="e.g. Prefer this method for emergency support" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-esu-500 outline-none" />
-              </div>
               <div class="flex items-center gap-3">
                 <input id="payout-primary" type="checkbox" class="rounded text-esu-600 focus:ring-esu-500" />
                 <label for="payout-primary" class="text-sm text-gray-700">Set as preferred (primary) method</label>
               </div>
               <p id="payout-msg" class="hidden text-sm text-esu-700"></p>
-              <button type="submit" class="px-5 py-2.5 rounded-full bg-esu-600 text-white font-semibold text-sm hover:bg-esu-700">Save payout method</button>
+              <button type="submit" id="payout-submit-btn" class="px-5 py-2.5 rounded-full bg-esu-600 text-white font-semibold text-sm hover:bg-esu-700">Save payout method</button>
             </form>
           </div>
         </div>
@@ -590,6 +543,31 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <!-- Support chat widget -->
+    <button id="support-fab" type="button" aria-label="Open support chat"
+      class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-esu-600 text-white shadow-lg hover:bg-esu-700 transition flex items-center justify-center">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+    </button>
+    <div id="support-panel" class="hidden fixed bottom-24 right-6 z-50 w-[min(100vw-2rem,380px)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden" style="max-height:min(70vh,520px)">
+      <div class="bg-esu-800 text-white px-4 py-3 flex items-center justify-between">
+        <div>
+          <p class="font-semibold text-sm">Circle Support</p>
+          <p class="text-xs text-white/70">We usually reply within a day</p>
+        </div>
+        <button type="button" id="support-close" class="text-white/80 hover:text-white text-xl leading-none">&times;</button>
+      </div>
+      <div id="support-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 text-sm">
+        <div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-gray-600 shadow-sm">
+          Hi — how can the Circle help you today? Ask about membership, payouts, or getting support.
+        </div>
+      </div>
+      <form id="support-form" class="border-t border-gray-100 p-3 flex gap-2 bg-white">
+        <input id="support-input" type="text" required placeholder="Type your message…" class="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-esu-500 outline-none" />
+        <button type="submit" class="px-4 py-2 rounded-xl bg-esu-600 text-white text-sm font-semibold hover:bg-esu-700">Send</button>
+      </form>
     </div>
 
     <!-- Footer -->
@@ -709,22 +687,24 @@
         return;
       }
       el.innerHTML = methods.map((m, i) => {
-        const typeLabel = { bank: 'U.S. Bank transfer', zelle: 'Zelle', paypal: 'PayPal', cashapp: 'Cash App', venmo: 'Venmo', creditcard: 'Credit / debit card', check: 'Paper check', applepay: 'Apple Pay', googlepay: 'Google Pay', wire: 'Wire transfer', other: 'Other' }[m.type] || m.type;
+        const typeLabel = { bank: 'U.S. Bank transfer / ACH', check: 'Paper check / Email', other: 'Link to pay to', creditcard: 'Card', digital: 'PayPal / Venmo / Cash App' }[m.type] || m.type;
         let detail = '';
-        if (m.type === 'bank' || m.type === 'wire') {
-          detail = (m.provider || '') + (m.accountNumber ? ' · ' + maskAccount(m.accountNumber) : '');
+        if (m.type === 'bank') {
+          detail = esc(m.provider || '') + (m.accountNumber ? ' · ' + maskAccount(m.accountNumber) : '');
           if (m.routing) detail += '<br><span class="text-xs text-gray-500">Routing: ' + maskAccount(m.routing) + '</span>';
-        } else if (m.type === 'paypal') detail = m.accountNumber || '';
-        else if (m.type === 'zelle') detail = m.accountNumber || '';
-        else if (m.type === 'cashapp') detail = m.accountNumber || '';
-        else if (m.type === 'venmo') detail = m.accountNumber || '';
-        else if (m.type === 'creditcard') detail = (m.provider || 'Card') + (m.accountNumber ? ' · •••• ' + m.accountNumber : '');
-        else if (m.type === 'check') detail = m.accountNumber || m.provider || '';
-        else if (m.type === 'applepay' || m.type === 'googlepay') detail = m.accountNumber || '';
-        else detail = m.accountNumber || m.provider || '';
+          if (m.extra && m.extra.bankAddress) detail += '<br><span class="text-xs text-gray-500">' + esc(m.extra.bankAddress) + '</span>';
+        } else if (m.type === 'check') {
+          detail = esc(m.accountNumber || ''); // address
+          if (m.extra && m.extra.email) detail += '<br><span class="text-xs text-gray-500">' + esc(m.extra.email) + '</span>';
+          if (m.extra && m.extra.bankName) detail += '<br><span class="text-xs text-gray-500">' + esc(m.extra.bankName) + '</span>';
+        } else if (m.type === 'other') {
+          detail = '<a href="' + esc(m.accountNumber) + '" target="_blank" rel="noopener" class="text-esu-600 hover:underline break-all">' + esc(m.accountNumber) + '</a>';
+        } else {
+          detail = esc(m.accountNumber || m.provider || '');
+        }
         return `
           <div class="flex items-start justify-between gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50/80">
-            <div>
+            <div class="min-w-0">
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-xs font-semibold uppercase tracking-wide text-esu-700 bg-esu-50 px-2 py-0.5 rounded">${esc(typeLabel)}</span>
                 ${m.primary ? '<span class="text-xs font-medium text-white bg-esu-600 px-2 py-0.5 rounded">Primary</span>' : ''}
@@ -1183,16 +1163,10 @@
     // Dynamic payout fields by method type
     const PAYOUT_HINTS = {
       bank: 'Direct deposit to a U.S. checking or savings account.',
-      zelle: 'Send to the email or phone number enrolled in Zelle.',
-      paypal: 'Funds will be sent to this PayPal account.',
-      cashapp: 'Use your $Cashtag (e.g. $JaneDoe).',
-      venmo: 'Your Venmo username (with or without @).',
-      creditcard: 'We only store brand and last 4 digits — never the full card number.',
-      check: 'A paper check will be mailed to this U.S. address.',
-      applepay: 'Phone or email linked to your Apple Pay / Apple Cash.',
-      googlepay: 'Phone or email linked to your Google Pay account.',
-      wire: 'Domestic U.S. wire — bank name, account, and routing required.',
-      other: 'Describe any other U.S.-based way to receive funds.'
+      check: 'Paper check by mail, or notification by email.',
+      creditcard: 'Temporarily unavailable.',
+      digital: 'PayPal, Venmo & Cash App are temporarily unavailable.',
+      other: 'Paste a payment link (invoice, payment page, etc.).'
     };
 
     function syncPayoutFields() {
@@ -1200,49 +1174,21 @@
       document.querySelectorAll('.payout-fields').forEach(el => el.classList.add('hidden'));
       const hint = document.getElementById('payout-type-hint');
       if (hint) hint.textContent = PAYOUT_HINTS[type] || '';
+      const btn = document.getElementById('payout-submit-btn');
 
-      const nameLabel = document.getElementById('payout-name-label');
-      const nameInput = document.getElementById('payout-name');
-
-      if (type === 'bank' || type === 'wire') {
+      if (type === 'bank') {
         document.getElementById('fields-bank').classList.remove('hidden');
-        document.getElementById('wire-extra').classList.toggle('hidden', type !== 'wire');
-        if (nameLabel) nameLabel.textContent = 'Account holder name';
-        if (nameInput) nameInput.placeholder = 'Name exactly as on the bank account';
-      } else if (type === 'paypal') {
-        document.getElementById('fields-paypal').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Name on PayPal account';
-        if (nameInput) nameInput.placeholder = 'Full name on PayPal';
-      } else if (type === 'zelle') {
-        document.getElementById('fields-zelle').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Name on Zelle';
-        if (nameInput) nameInput.placeholder = 'Name registered with Zelle';
-      } else if (type === 'cashapp') {
-        document.getElementById('fields-cashapp').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Name on Cash App';
-        if (nameInput) nameInput.placeholder = 'Legal name on Cash App';
-      } else if (type === 'venmo') {
-        document.getElementById('fields-venmo').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Name on Venmo';
-        if (nameInput) nameInput.placeholder = 'Name on Venmo profile';
-      } else if (type === 'creditcard') {
-        document.getElementById('fields-creditcard').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Cardholder name';
-        if (nameInput) nameInput.placeholder = 'Name as printed on card';
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
       } else if (type === 'check') {
         document.getElementById('fields-check').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Recipient name';
-        if (nameInput) nameInput.placeholder = 'Name for the check';
-      } else if (type === 'applepay' || type === 'googlepay') {
-        document.getElementById('fields-wallet').classList.remove('hidden');
-        const wl = document.getElementById('wallet-id-label');
-        if (wl) wl.textContent = type === 'applepay' ? 'Phone or email on Apple Pay' : 'Phone or email on Google Pay';
-        if (nameLabel) nameLabel.textContent = 'Account name';
-        if (nameInput) nameInput.placeholder = 'Name on the wallet account';
-      } else {
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+      } else if (type === 'other') {
         document.getElementById('fields-other').classList.remove('hidden');
-        if (nameLabel) nameLabel.textContent = 'Recipient name';
-        if (nameInput) nameInput.placeholder = 'Your name';
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+      } else {
+        // under maintenance
+        document.getElementById('fields-maintenance').classList.remove('hidden');
+        if (btn) { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
       }
     }
 
@@ -1254,61 +1200,49 @@
       e.preventDefault();
       if (!currentUser) return;
       const type = document.getElementById('payout-type').value;
+      if (type === 'creditcard' || type === 'digital') {
+        alert('This method is under maintenance. Please choose Bank transfer, Paper check, or Others.');
+        return;
+      }
+
+      let accountName = '';
       let provider = '';
       let accountNumber = '';
       let routing = '';
-      let accountName = document.getElementById('payout-name').value.trim();
+      let extra = {};
 
-      if (type === 'bank' || type === 'wire') {
-        provider = document.getElementById('payout-provider').value.trim();
-        accountNumber = document.getElementById('payout-account').value.trim();
+      if (type === 'bank') {
+        provider = document.getElementById('payout-bank-name').value.trim();
+        accountName = document.getElementById('payout-holder-name').value.trim();
         routing = document.getElementById('payout-routing').value.trim();
-        if (!provider || !accountNumber || !routing) {
-          alert('Please enter bank, account number, and routing number.');
-          return;
-        }
-      } else if (type === 'paypal') {
-        accountNumber = document.getElementById('payout-paypal-email').value.trim();
-        provider = 'PayPal';
-        if (!accountNumber) { alert('Enter your PayPal email.'); return; }
-      } else if (type === 'zelle') {
-        accountNumber = document.getElementById('payout-zelle-id').value.trim();
-        provider = 'Zelle';
-        if (!accountNumber) { alert('Enter your Zelle email or phone.'); return; }
-      } else if (type === 'cashapp') {
-        accountNumber = document.getElementById('payout-cashtag').value.trim();
-        provider = 'Cash App';
-        if (!accountNumber) { alert('Enter your $Cashtag.'); return; }
-      } else if (type === 'venmo') {
-        accountNumber = document.getElementById('payout-venmo').value.trim();
-        provider = 'Venmo';
-        if (!accountNumber) { alert('Enter your Venmo username.'); return; }
-      } else if (type === 'creditcard') {
-        provider = document.getElementById('payout-card-brand').value.trim();
-        accountNumber = document.getElementById('payout-card-last4').value.trim();
-        const cardName = document.getElementById('payout-card-name').value.trim();
-        if (cardName) accountName = cardName;
-        if (!provider || accountNumber.length !== 4) {
-          alert('Select card brand and enter the last 4 digits only.');
+        accountNumber = document.getElementById('payout-account').value.trim();
+        extra.bankAddress = document.getElementById('payout-bank-address').value.trim();
+        if (!provider || !accountName || !routing || !accountNumber) {
+          alert('Please fill Bank name, Bank holder name, Routing number, and Account number.');
           return;
         }
       } else if (type === 'check') {
-        const payee = document.getElementById('payout-check-payee').value.trim();
-        if (payee) accountName = payee;
-        accountNumber = document.getElementById('payout-check-address').value.trim();
-        provider = 'Paper check';
-        if (!accountNumber) { alert('Enter the mailing address for the check.'); return; }
-      } else if (type === 'applepay' || type === 'googlepay') {
-        accountNumber = document.getElementById('payout-wallet-id').value.trim();
-        provider = type === 'applepay' ? 'Apple Pay' : 'Google Pay';
-        if (!accountNumber) { alert('Enter the phone or email linked to the wallet.'); return; }
-      } else {
-        accountNumber = document.getElementById('payout-other-details').value.trim();
-        provider = 'Other';
-        if (!accountNumber) { alert('Describe the payment details.'); return; }
+        accountName = document.getElementById('payout-check-name').value.trim();
+        accountNumber = document.getElementById('payout-check-address').value.trim(); // store address as main detail
+        extra.email = document.getElementById('payout-check-email').value.trim();
+        extra.optionalAccount = document.getElementById('payout-check-account').value.trim();
+        extra.bankName = document.getElementById('payout-check-bank').value.trim();
+        extra.bankAddress = document.getElementById('payout-check-bank-address').value.trim();
+        provider = extra.bankName || 'Paper check / Email';
+        if (!accountName || !accountNumber) {
+          alert('Please enter Name and Address.');
+          return;
+        }
+      } else if (type === 'other') {
+        accountNumber = document.getElementById('payout-pay-link').value.trim();
+        accountName = document.getElementById('payout-other-name').value.trim() || 'Payment link';
+        provider = 'Link to pay to';
+        extra.notes = document.getElementById('payout-other-notes').value.trim();
+        if (!accountNumber || !/^https?:\/\//i.test(accountNumber)) {
+          alert('Please enter a valid payment link starting with https://');
+          return;
+        }
       }
-
-      if (!accountName) { alert('Please enter the account / recipient name.'); return; }
 
       const method = {
         id: Date.now().toString(36),
@@ -1317,7 +1251,8 @@
         provider,
         accountNumber,
         routing,
-        notes: document.getElementById('payout-notes').value.trim(),
+        notes: extra.notes || '',
+        extra,
         primary: document.getElementById('payout-primary').checked,
         addedAt: new Date().toISOString()
       };
@@ -1394,6 +1329,90 @@
       e.preventDefault();
       postItem('offers', 'offer-type', 'offer-body', 'offer-msg');
     });
+
+    // ---------- Support chat ----------
+    const supportFab = document.getElementById('support-fab');
+    const supportPanel = document.getElementById('support-panel');
+    const supportClose = document.getElementById('support-close');
+    const supportMessages = document.getElementById('support-messages');
+    const supportForm = document.getElementById('support-form');
+    const supportInput = document.getElementById('support-input');
+
+    function openSupport() {
+      supportPanel.classList.remove('hidden');
+      supportInput?.focus();
+      loadSupportThread();
+    }
+    function closeSupport() { supportPanel.classList.add('hidden'); }
+    supportFab?.addEventListener('click', () => {
+      if (supportPanel.classList.contains('hidden')) openSupport();
+      else closeSupport();
+    });
+    supportClose?.addEventListener('click', closeSupport);
+
+    function appendSupportBubble(text, mine) {
+      const div = document.createElement('div');
+      div.className = mine
+        ? 'bg-esu-600 text-white rounded-xl px-3 py-2 ml-8 shadow-sm'
+        : 'bg-white border border-gray-100 rounded-xl px-3 py-2 mr-8 text-gray-700 shadow-sm';
+      div.textContent = text;
+      supportMessages.appendChild(div);
+      supportMessages.scrollTop = supportMessages.scrollHeight;
+    }
+
+    async function loadSupportThread() {
+      if (!currentUser || !supportMessages) return;
+      // Keep welcome message; load user's recent support messages
+      try {
+        onSnapshot(
+          query(
+            collection(db, 'supportMessages'),
+            orderBy('createdAt', 'asc'),
+            limit(50)
+          ),
+          (snap) => {
+            const mine = snap.docs
+              .map(d => Object.assign({ id: d.id }, d.data()))
+              .filter(m => m.authorId === currentUser.uid || m.toUserId === currentUser.uid);
+            // Rebuild list with welcome + messages
+            supportMessages.innerHTML = '<div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-gray-600 shadow-sm">Hi — how can the Circle help you today? Ask about membership, payouts, or getting support.</div>';
+            mine.forEach(m => {
+              appendSupportBubble(m.body || '', m.authorId === currentUser.uid);
+            });
+          },
+          () => { /* rules may block; local-only still works on send */ }
+        );
+      } catch (_) {}
+    }
+
+    supportForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) {
+        alert('Please sign in to message support.');
+        return;
+      }
+      const body = supportInput.value.trim();
+      if (!body) return;
+      const name = [memberProfile && memberProfile.firstName, memberProfile && memberProfile.lastName].filter(Boolean).join(' ') || 'Member';
+      supportInput.value = '';
+      appendSupportBubble(body, true);
+      try {
+        await addDoc(collection(db, 'supportMessages'), {
+          body,
+          authorId: currentUser.uid,
+          authorName: name,
+          authorEmail: (memberProfile && memberProfile.email) || currentUser.email || '',
+          toUserId: 'support',
+          createdAt: serverTimestamp()
+        });
+        setTimeout(() => {
+          appendSupportBubble('Thanks — the Circle support team will review your message. For urgent needs, also post in Ask for support on the Feed.', false);
+        }, 600);
+      } catch (err) {
+        appendSupportBubble('Message saved on your device. If it does not reach support, check that you are signed in and Firestore rules allow supportMessages.', false);
+      }
+    });
+
   </script>
 </body>
 </html>
