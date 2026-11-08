@@ -221,7 +221,7 @@
         dob: document.getElementById('dob').value,
         county: document.getElementById('county').value.trim(),
         zip: document.getElementById('zip').value.trim(),
-        createdAt: serverTimestamp(), role: 'member'
+        createdAt: serverTimestamp(), role: 'member', disabled: false
       };
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, document.getElementById('password').value);

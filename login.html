@@ -95,7 +95,7 @@
   </div>
 
   <script type="module">
-    import { auth, db, signInWithEmailAndPassword, doc, getDoc } from './js/firebase.js';
+    import { auth, db, signInWithEmailAndPassword, signOut, doc, getDoc } from './js/firebase.js';
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -110,11 +110,20 @@
         const snap = await getDoc(doc(db, 'members', cred.user.uid));
         if (snap.exists()) {
           const data = snap.data();
+          if (data.disabled === true) {
+            await signOut(auth);
+            throw { code: 'auth/user-disabled', message: 'This account has been disabled. Contact Circle support if you believe this is a mistake.' };
+          }
           localStorage.setItem('esu_member', JSON.stringify({ ...data, uid: cred.user.uid, joinedAt: new Date().toISOString() }));
+          if (data.role === 'admin' || data.isAdmin === true) {
+            window.location.href = 'admin.html';
+            return;
+          }
         }
         window.location.href = 'dashboard.html';
       } catch (err) {
         let msg = 'Incorrect email or password.';
+        if (err.code === 'auth/user-disabled') msg = err.message || 'This account has been disabled.';
         if (err.code === 'auth/operation-not-allowed') msg = 'Enable Email/Password in Firebase Console.';
         errEl.textContent = msg;
         errEl.classList.remove('hidden');

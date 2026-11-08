@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Eccentric Souls in Unity (ESU)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            esu: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 400: '#4ade80',
+              500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d'
+            }
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .nav-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+
+  <div id="auth-loading" class="min-h-screen flex items-center justify-center"><p class="text-gray-500">Loading…</p></div>
+
+  <div id="auth-denied" class="hidden min-h-screen flex items-center justify-center px-4">
+    <div class="text-center max-w-md">
+      <h1 class="text-2xl font-bold mb-2">Admin access required</h1>
+      <p class="text-gray-600 mb-6">Sign in with an account that has the <code class="text-sm bg-gray-200 px-1 rounded">admin</code> role on its member profile.</p>
+      <div class="flex gap-3 justify-center">
+        <a href="login.html" class="px-5 py-2.5 rounded-full bg-esu-600 text-white font-semibold text-sm">Sign in</a>
+        <a href="dashboard.html" class="px-5 py-2.5 rounded-full border border-gray-300 font-semibold text-sm">Member area</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-main" class="hidden min-h-screen">
+    <header class="bg-esu-900 text-white sticky top-0 z-40 shadow">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-lg">ESU<span class="text-esu-400">.</span> Admin</span>
+          <span id="admin-badge" class="text-xs bg-esu-600 px-2 py-0.5 rounded-full">Admin</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span id="admin-name" class="text-white/70 hidden sm:inline"></span>
+          <a href="dashboard.html" class="px-3 py-1.5 rounded-full border border-white/25 hover:bg-white/10">Member area</a>
+          <button id="logout-btn" type="button" class="px-3 py-1.5 rounded-full border border-white/25 hover:bg-white/10">Sign out</button>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 pb-3 flex gap-2 overflow-x-auto text-sm">
+        <button type="button" data-tab="users" class="nav-btn active px-3 py-1.5 rounded-full whitespace-nowrap">Members</button>
+        <button type="button" data-tab="payouts" class="nav-btn px-3 py-1.5 rounded-full whitespace-nowrap">Payouts to fund</button>
+        <button type="button" data-tab="support" class="nav-btn px-3 py-1.5 rounded-full whitespace-nowrap">Support chat</button>
+        <button type="button" data-tab="requests" class="nav-btn px-3 py-1.5 rounded-full whitespace-nowrap">Requests</button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- MEMBERS -->
+      <section id="tab-users" class="tab-panel active">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div>
+            <h1 class="text-2xl font-bold">Members</h1>
+            <p class="text-sm text-gray-500">View profiles, disable accounts for abuse, open payout details.</p>
+          </div>
+          <input id="user-search" type="search" placeholder="Search name or email…" class="px-4 py-2 rounded-xl border border-gray-200 bg-white text-sm w-full sm:w-64 focus:ring-2 focus:ring-esu-500 outline-none" />
+        </div>
+        <div id="users-list" class="space-y-3">
+          <p class="text-gray-500 text-sm">Loading members…</p>
+        </div>
+      </section>
+
+      <!-- PAYOUTS -->
+      <section id="tab-payouts" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold">Payouts to fund</h1>
+          <p class="text-sm text-gray-500">Members with saved payout methods. Use these details only for approved Circle support.</p>
+        </div>
+        <div id="payouts-list" class="space-y-4">
+          <p class="text-gray-500 text-sm">Loading…</p>
+        </div>
+      </section>
+
+      <!-- SUPPORT -->
+      <section id="tab-support" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold">Support chat</h1>
+          <p class="text-sm text-gray-500">Reply to members. Disable accounts if messages are abusive.</p>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-100 font-semibold text-sm">Conversations</div>
+            <div id="support-threads" class="max-h-[28rem] overflow-y-auto divide-y divide-gray-50">
+              <p class="p-4 text-sm text-gray-500">Loading…</p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col min-h-[28rem]">
+            <div id="support-thread-header" class="px-4 py-3 border-b border-gray-100 text-sm text-gray-500">Select a conversation</div>
+            <div id="support-thread-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"></div>
+            <form id="admin-reply-form" class="hidden border-t border-gray-100 p-3 flex gap-2">
+              <input id="admin-reply-input" type="text" required placeholder="Reply as Circle Support…" class="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-esu-500 outline-none" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-esu-600 text-white text-sm font-semibold hover:bg-esu-700">Send</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- REQUESTS -->
+      <section id="tab-requests" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold">Open requests</h1>
+          <p class="text-sm text-gray-500">Member asks — pair with payout details when funding is approved.</p>
+        </div>
+        <div id="admin-requests" class="space-y-3">
+          <p class="text-gray-500 text-sm">Loading…</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Member detail modal -->
+  <div id="member-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+      <div class="flex justify-between items-start mb-4">
+        <h2 class="text-lg font-bold" id="modal-name">Member</h2>
+        <button type="button" id="modal-close" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+      </div>
+      <div id="modal-body" class="space-y-3 text-sm"></div>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <button type="button" id="modal-disable" class="px-4 py-2 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700">Disable account</button>
+        <button type="button" id="modal-enable" class="hidden px-4 py-2 rounded-full bg-esu-600 text-white text-sm font-semibold hover:bg-esu-700">Re-enable account</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      auth, db, signOut, onAuthStateChanged, doc, getDoc, updateDoc,
+      collection, addDoc, getDocs, query, orderBy, limit, onSnapshot, serverTimestamp
+    } from './js/firebase.js';
+
+    let currentUser = null;
+    let adminProfile = null;
+    let allMembers = [];
+    let selectedSupportUid = null;
+    let selectedMemberUid = null;
+    let unsubSupport = null;
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = s == null ? '' : String(s);
+      return d.innerHTML;
+    }
+
+    function mask(s) {
+      if (!s || String(s).length < 5) return '••••';
+      return '••••' + String(s).slice(-4);
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + name)?.classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === name);
+      });
+    }
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.addEventListener('click', () => switchTab(b.dataset.tab));
+    });
+
+    function showDenied() {
+      document.getElementById('auth-loading').classList.add('hidden');
+      document.getElementById('admin-main').classList.add('hidden');
+      document.getElementById('auth-denied').classList.remove('hidden');
+    }
+    function showAdmin() {
+      document.getElementById('auth-loading').classList.add('hidden');
+      document.getElementById('auth-denied').classList.add('hidden');
+      document.getElementById('admin-main').classList.remove('hidden');
+    }
+
+    function isAdmin(profile) {
+      return profile && (profile.role === 'admin' || profile.isAdmin === true);
+    }
+
+    // ----- Members -----
+    async function loadMembers() {
+      const el = document.getElementById('users-list');
+      try {
+        const snap = await getDocs(collection(db, 'members'));
+        allMembers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+        allMembers.sort((a, b) => String(a.firstName || '').localeCompare(String(b.firstName || '')));
+        renderMembers(allMembers);
+        renderPayoutsBoard(allMembers);
+      } catch (e) {
+        el.innerHTML = '<p class="text-sm text-red-600">Could not load members. Update Firestore rules so admins can read all <code>members</code> documents.</p>';
+      }
+    }
+
+    function renderMembers(list) {
+      const el = document.getElementById('users-list');
+      const q = (document.getElementById('user-search').value || '').toLowerCase().trim();
+      const filtered = !q ? list : list.filter(m => {
+        const blob = [m.firstName, m.lastName, m.email, m.phone, m.county].join(' ').toLowerCase();
+        return blob.includes(q);
+      });
+      if (!filtered.length) {
+        el.innerHTML = '<p class="text-sm text-gray-500">No members match.</p>';
+        return;
+      }
+      el.innerHTML = filtered.map(m => {
+        const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Member';
+        const disabled = m.disabled === true;
+        const photo = m.photoURL
+          ? `<img src="${esc(m.photoURL)}" class="w-10 h-10 rounded-full object-cover" alt="" />`
+          : `<div class="w-10 h-10 rounded-full bg-esu-500 text-white flex items-center justify-center font-bold">${esc((m.firstName || 'M')[0].toUpperCase())}</div>`;
+        const payoutCount = Array.isArray(m.payoutMethods) ? m.payoutMethods.length : 0;
+        return `<div class="bg-white rounded-xl border border-gray-100 p-4 flex flex-wrap items-center gap-4 shadow-sm">
+          ${photo}
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-semibold">${esc(name)}</span>
+              ${m.role === 'admin' ? '<span class="text-[10px] uppercase bg-esu-100 text-esu-800 px-1.5 py-0.5 rounded">Admin</span>' : ''}
+              ${disabled ? '<span class="text-[10px] uppercase bg-red-100 text-red-700 px-1.5 py-0.5 rounded">Disabled</span>' : ''}
+            </div>
+            <p class="text-xs text-gray-500 truncate">${esc(m.email || '—')} · ${esc(m.county || '—')}</p>
+            <p class="text-xs text-gray-400 mt-0.5">${payoutCount} payout method(s)</p>
+          </div>
+          <button type="button" data-uid="${esc(m.uid)}" class="view-member px-3 py-1.5 rounded-full border border-gray-200 text-sm font-medium hover:bg-gray-50">View / manage</button>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.view-member').forEach(btn => {
+        btn.addEventListener('click', () => openMemberModal(btn.dataset.uid));
+      });
+    }
+
+    document.getElementById('user-search').addEventListener('input', () => renderMembers(allMembers));
+
+    function openMemberModal(uid) {
+      const m = allMembers.find(x => x.uid === uid);
+      if (!m) return;
+      selectedMemberUid = uid;
+      const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Member';
+      document.getElementById('modal-name').textContent = name;
+      const methods = Array.isArray(m.payoutMethods) ? m.payoutMethods : [];
+      let payoutHtml = methods.length
+        ? methods.map(pm => {
+            const typeLabel = { bank: 'U.S. Bank / ACH', check: 'Paper check / Email', other: 'Pay link' }[pm.type] || pm.type;
+            let lines = `<p class="font-medium">${esc(typeLabel)}${pm.primary ? ' · Primary' : ''}</p>`;
+            lines += `<p>${esc(pm.accountName || '')}</p>`;
+            if (pm.type === 'bank') {
+              lines += `<p class="text-gray-600">${esc(pm.provider || '')} · Acct ${esc(pm.accountNumber || '')} · Routing ${esc(pm.routing || '')}</p>`;
+              if (pm.extra && pm.extra.bankAddress) lines += `<p class="text-gray-500">${esc(pm.extra.bankAddress)}</p>`;
+            } else if (pm.type === 'check') {
+              lines += `<p class="text-gray-600">${esc(pm.accountNumber || '')}</p>`;
+              if (pm.extra) {
+                if (pm.extra.email) lines += `<p class="text-gray-500">${esc(pm.extra.email)}</p>`;
+                if (pm.extra.bankName) lines += `<p class="text-gray-500">${esc(pm.extra.bankName)}</p>`;
+              }
+            } else if (pm.type === 'other') {
+              lines += `<p class="break-all text-esu-700">${esc(pm.accountNumber || '')}</p>`;
+            }
+            return `<div class="border border-gray-100 rounded-lg p-3 bg-gray-50">${lines}</div>`;
+          }).join('')
+        : '<p class="text-gray-500">No payout methods on file.</p>';
+
+      document.getElementById('modal-body').innerHTML = `
+        <p><span class="text-gray-500">Email:</span> ${esc(m.email || '—')}</p>
+        <p><span class="text-gray-500">Phone:</span> ${esc(m.phone || '—')}</p>
+        <p><span class="text-gray-500">County:</span> ${esc(m.county || '—')}</p>
+        <p><span class="text-gray-500">Address:</span> ${esc(m.homeAddress || '—')}</p>
+        <p><span class="text-gray-500">Status:</span> ${m.disabled ? '<span class="text-red-600 font-medium">Disabled</span>' : '<span class="text-esu-700 font-medium">Active</span>'}</p>
+        <div class="pt-2">
+          <p class="font-semibold mb-2">Payout details (for approved funding)</p>
+          <div class="space-y-2">${payoutHtml}</div>
+        </div>
+      `;
+      document.getElementById('modal-disable').classList.toggle('hidden', m.disabled === true);
+      document.getElementById('modal-enable').classList.toggle('hidden', m.disabled !== true);
+      document.getElementById('member-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('member-modal').classList.add('hidden');
+    });
+    document.getElementById('member-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'member-modal') document.getElementById('member-modal').classList.add('hidden');
+    });
+
+    async function setDisabled(flag) {
+      if (!selectedMemberUid) return;
+      const reason = flag ? prompt('Reason for disabling (optional):') : '';
+      try {
+        await updateDoc(doc(db, 'members', selectedMemberUid), {
+          disabled: flag,
+          disabledAt: flag ? new Date().toISOString() : null,
+          disabledReason: flag ? (reason || 'Admin action') : null,
+          disabledBy: currentUser.uid
+        });
+        const m = allMembers.find(x => x.uid === selectedMemberUid);
+        if (m) {
+          m.disabled = flag;
+          m.disabledReason = flag ? reason : null;
+        }
+        renderMembers(allMembers);
+        openMemberModal(selectedMemberUid);
+        alert(flag ? 'Account disabled. They will be blocked from the member area on next load.' : 'Account re-enabled.');
+      } catch (e) {
+        alert('Could not update member. Check admin Firestore rules.');
+      }
+    }
+    document.getElementById('modal-disable').addEventListener('click', () => setDisabled(true));
+    document.getElementById('modal-enable').addEventListener('click', () => setDisabled(false));
+
+    // ----- Payouts board -----
+    function renderPayoutsBoard(list) {
+      const el = document.getElementById('payouts-list');
+      const withPay = list.filter(m => Array.isArray(m.payoutMethods) && m.payoutMethods.length && !m.disabled);
+      if (!withPay.length) {
+        el.innerHTML = '<p class="text-sm text-gray-500">No active members with payout methods yet.</p>';
+        return;
+      }
+      el.innerHTML = withPay.map(m => {
+        const name = [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Member';
+        const primary = m.payoutMethods.find(p => p.primary) || m.payoutMethods[0];
+        const typeLabel = { bank: 'U.S. Bank / ACH', check: 'Paper check / Email', other: 'Pay link' }[primary.type] || primary.type;
+        let detail = '';
+        if (primary.type === 'bank') {
+          detail = `${esc(primary.provider || '')} · Acct: ${esc(primary.accountNumber || '')} · Routing: ${esc(primary.routing || '')}`;
+        } else if (primary.type === 'check') {
+          detail = `${esc(primary.accountNumber || '')}${primary.extra && primary.extra.email ? ' · ' + esc(primary.extra.email) : ''}`;
+        } else {
+          detail = esc(primary.accountNumber || '');
+        }
+        return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+          <div class="flex flex-wrap justify-between gap-2 mb-2">
+            <div>
+              <p class="font-semibold">${esc(name)}</p>
+              <p class="text-xs text-gray-500">${esc(m.email || '')}</p>
+            </div>
+            <span class="text-xs font-semibold uppercase bg-esu-50 text-esu-800 px-2 py-1 rounded h-fit">${esc(typeLabel)}${primary.primary ? ' · Primary' : ''}</span>
+          </div>
+          <p class="text-sm text-gray-800">${esc(primary.accountName || '')}</p>
+          <p class="text-sm text-gray-600 mt-1 break-all">${detail}</p>
+          <button type="button" data-uid="${esc(m.uid)}" class="view-member mt-3 text-sm text-esu-700 font-semibold hover:underline">Full details →</button>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.view-member').forEach(btn => {
+        btn.addEventListener('click', () => openMemberModal(btn.dataset.uid));
+      });
+    }
+
+    // ----- Support -----
+    function loadSupportThreads() {
+      onSnapshot(query(collection(db, 'supportMessages'), orderBy('createdAt', 'desc'), limit(200)), snap => {
+        const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Group by member (author if not support, else toUserId)
+        const byUser = {};
+        msgs.forEach(m => {
+          const uid = m.authorId === 'support' || m.fromAdmin ? (m.toUserId || m.authorId) : m.authorId;
+          if (!uid || uid === 'support') return;
+          if (!byUser[uid]) byUser[uid] = [];
+          byUser[uid].push(m);
+        });
+        const threads = Object.keys(byUser).map(uid => {
+          const list = byUser[uid].sort((a, b) => {
+            const ta = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+            const tb = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+            return tb - ta;
+          });
+          const last = list[0];
+          const member = allMembers.find(x => x.uid === uid);
+          const name = member
+            ? [member.firstName, member.lastName].filter(Boolean).join(' ')
+            : (last.authorName || uid.slice(0, 8));
+          return { uid, name, email: member?.email || last.authorEmail || '', last, count: list.length, messages: byUser[uid] };
+        }).sort((a, b) => {
+          const ta = a.last.createdAt?.toDate ? a.last.createdAt.toDate().getTime() : 0;
+          const tb = b.last.createdAt?.toDate ? b.last.createdAt.toDate().getTime() : 0;
+          return tb - ta;
+        });
+
+        const el = document.getElementById('support-threads');
+        if (!threads.length) {
+          el.innerHTML = '<p class="p-4 text-sm text-gray-500">No support messages yet.</p>';
+          return;
+        }
+        el.innerHTML = threads.map(th => {
+          const preview = (th.last.body || '').slice(0, 60);
+          const when = th.last.createdAt?.toDate ? th.last.createdAt.toDate().toLocaleString() : '';
+          return `<button type="button" data-uid="${esc(th.uid)}" class="support-thread w-full text-left px-4 py-3 hover:bg-esu-50 transition ${selectedSupportUid === th.uid ? 'bg-esu-50' : ''}">
+            <div class="flex justify-between gap-2">
+              <span class="font-semibold text-sm truncate">${esc(th.name)}</span>
+              <span class="text-[10px] text-gray-400 whitespace-nowrap">${esc(when)}</span>
+            </div>
+            <p class="text-xs text-gray-500 truncate mt-0.5">${esc(preview)}</p>
+          </button>`;
+        }).join('');
+        el.querySelectorAll('.support-thread').forEach(btn => {
+          btn.addEventListener('click', () => openSupportThread(btn.dataset.uid, threads));
+        });
+        window.__supportThreads = threads;
+        if (selectedSupportUid) openSupportThread(selectedSupportUid, threads);
+      }, () => {
+        document.getElementById('support-threads').innerHTML = '<p class="p-4 text-sm text-red-600">Could not load support messages. Check rules.</p>';
+      });
+    }
+
+    function openSupportThread(uid, threads) {
+      selectedSupportUid = uid;
+      const th = (threads || window.__supportThreads || []).find(t => t.uid === uid);
+      const header = document.getElementById('support-thread-header');
+      const box = document.getElementById('support-thread-messages');
+      const form = document.getElementById('admin-reply-form');
+      if (!th) {
+        header.textContent = 'Conversation';
+        box.innerHTML = '';
+        form.classList.add('hidden');
+        return;
+      }
+      const member = allMembers.find(m => m.uid === uid);
+      header.innerHTML = `<div class="flex flex-wrap items-center justify-between gap-2">
+        <span><strong>${esc(th.name)}</strong> <span class="text-gray-500">${esc(th.email)}</span></span>
+        <button type="button" data-uid="${esc(uid)}" class="disable-from-chat text-xs text-red-600 font-semibold hover:underline">Disable user</button>
+      </div>`;
+      header.querySelector('.disable-from-chat')?.addEventListener('click', () => {
+        selectedMemberUid = uid;
+        setDisabled(true);
+      });
+
+      const sorted = [...th.messages].sort((a, b) => {
+        const ta = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+        const tb = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+        return ta - tb;
+      });
+      box.innerHTML = sorted.map(m => {
+        const mine = m.fromAdmin || m.authorId === 'support';
+        return `<div class="${mine ? 'ml-8 bg-esu-600 text-white' : 'mr-8 bg-white border border-gray-100 text-gray-800'} rounded-xl px-3 py-2 text-sm shadow-sm">
+          <p>${esc(m.body || '')}</p>
+          <p class="text-[10px] opacity-70 mt-1">${mine ? 'Support' : esc(m.authorName || 'Member')}</p>
+        </div>`;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+      form.classList.remove('hidden');
+    }
+
+    document.getElementById('admin-reply-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!selectedSupportUid || !currentUser) return;
+      const input = document.getElementById('admin-reply-input');
+      const body = input.value.trim();
+      if (!body) return;
+      input.value = '';
+      try {
+        await addDoc(collection(db, 'supportMessages'), {
+          body,
+          authorId: 'support',
+          fromAdmin: true,
+          adminId: currentUser.uid,
+          authorName: 'Circle Support',
+          toUserId: selectedSupportUid,
+          createdAt: serverTimestamp()
+        });
+      } catch (err) {
+        alert('Could not send reply. Check Firestore rules for supportMessages.');
+      }
+    });
+
+    // ----- Requests -----
+    function loadRequests() {
+      onSnapshot(query(collection(db, 'requests'), orderBy('createdAt', 'desc'), limit(40)), snap => {
+        const el = document.getElementById('admin-requests');
+        const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (!items.length) {
+          el.innerHTML = '<p class="text-sm text-gray-500">No requests yet.</p>';
+          return;
+        }
+        el.innerHTML = items.map(item => {
+          const when = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleString() : '';
+          const member = allMembers.find(m => m.uid === item.authorId);
+          const hasPayout = member && Array.isArray(member.payoutMethods) && member.payoutMethods.length;
+          return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+            <div class="flex flex-wrap justify-between gap-2 mb-1">
+              <span class="text-xs font-semibold uppercase text-esu-700 bg-esu-50 px-2 py-0.5 rounded">${esc(item.type || '')}</span>
+              <span class="text-xs text-gray-400">${esc(when)}</span>
+            </div>
+            <p class="text-sm text-gray-800">${esc(item.body || '')}</p>
+            <p class="text-xs text-gray-500 mt-2">From ${esc(item.authorName || 'Member')} ${hasPayout ? '· <span class="text-esu-700 font-medium">Has payout method</span>' : '· <span class="text-amber-700">No payout method</span>'}</p>
+            ${item.authorId ? `<button type="button" data-uid="${esc(item.authorId)}" class="view-member mt-2 text-sm text-esu-700 font-semibold hover:underline">View member / payouts →</button>` : ''}
+          </div>`;
+        }).join('');
+        el.querySelectorAll('.view-member').forEach(btn => {
+          btn.addEventListener('click', () => {
+            switchTab('users');
+            openMemberModal(btn.dataset.uid);
+          });
+        });
+      }, () => {
+        document.getElementById('admin-requests').innerHTML = '<p class="text-sm text-red-600">Could not load requests.</p>';
+      });
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = 'index.html';
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        showDenied();
+        return;
+      }
+      currentUser = user;
+      try {
+        const snap = await getDoc(doc(db, 'members', user.uid));
+        adminProfile = snap.exists() ? snap.data() : {};
+        if (!isAdmin(adminProfile)) {
+          showDenied();
+          return;
+        }
+        if (adminProfile.disabled) {
+          showDenied();
+          return;
+        }
+        const name = [adminProfile.firstName, adminProfile.lastName].filter(Boolean).join(' ') || user.email;
+        document.getElementById('admin-name').textContent = name;
+        showAdmin();
+        await loadMembers();
+        loadSupportThreads();
+        loadRequests();
+      } catch (e) {
+        showDenied();
+      }
+    });
+  </script>
+</body>
+</html>
